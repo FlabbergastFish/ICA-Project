@@ -15,14 +15,14 @@ public:
 
         virtual void writeCheck(double amount) = 0;
 
-        double getMinimumBalance() const;
-        double getServiceCharge() const;
+//      double getMinimumBalance() const;
+//      double getServiceCharge() const;
 
-        void setMinimumBalance(double minBalance);
-        void setServiceCharge(double charge);
+//      void setMinimumBalance(double minBalance);
+//      void setServiceCharge(double charge);
 
         // destructor
-        virtual ~checkingAccountType() {}
+//      virtual ~checkingAccountType() {}
 };
 
 #endif
