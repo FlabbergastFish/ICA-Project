@@ -52,6 +52,7 @@ void serviceChargeCheckingType::setServiceChargeChecks(double amount)
 int serviceChargeCheckingType::getNumberOfChecksWritten()
 {
         //numberOfChecksWritten = num;
+	return numberOfChecksWritten;
 }
 
 void serviceChargeCheckingType::postServiceCharge()
