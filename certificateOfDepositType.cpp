@@ -1,6 +1,6 @@
 #include "certificateOfDepositType.h"
 
-certificateOfDepositType::certificateOfDepositType(double interestRate, int doubleCDMonth) : bankAccount(name, accountNumber, balance)
+certificateOfDepositType::certificateOfDepositType(double interestRate, int doubleCDMonth) : bankAccountType(name, accountNumber, balance)
     {
         this->name = name;
         this->accountNumber = accountNumber;
