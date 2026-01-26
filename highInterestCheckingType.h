@@ -6,8 +6,7 @@
 
 using namespace std;
 
-class highInterestCheckingType : public noServiceChargeCheckingType
-{
+class highInterestCheckingType : public noServiceChargeCheckingType{
 	public:
 		highInterestCheckingType(string name, int accountNumber, double balance);
 		highInterestCheckingType(string name, int accountNumber, double balance, 
