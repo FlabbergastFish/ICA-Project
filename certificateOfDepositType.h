@@ -5,5 +5,6 @@ class certificateOfDepositType : public bankAccountType
 public:
     double interestRate;
     int currentCDMonth;
-    certificateOfDepositType(double interestRate, int doubleCDMonth) : bankAccountType(name, accountNumber, balance);
+
+    certificateOfDepositType(string name, int accountNumber, double balance, double interestRate, int currentCDMonth);
 };
