@@ -2,13 +2,13 @@
 #include <iomanip>
 #include <iostream>
 using namespace std;
-class bankAccount
+class bankAccountType
 {
 public:
     string name;
     int accountNumber;
     int balance;
-    bankAccount(string name, int accountNumber, int balance)
+    bankAccountType(string name, int accountNumber, int balance)
     {
         this->name = name;
         this->accountNumber = accountNumber;
