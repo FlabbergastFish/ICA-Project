@@ -23,7 +23,7 @@ public:
 
     void makeDeposit(int depositAmount);
 
-    void makeWithdrawal(int withdrawalAmount);
+    void withdraw(int withdrawalAmount);
 
     void createMonthlyStatement();
 };
