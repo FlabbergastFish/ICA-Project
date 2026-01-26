@@ -20,7 +20,7 @@ void bankAccountType::makeDeposit(int depositAmount)
     balance += depositAmount;
 }
 
-void bankAccountType::makeWithdrawal(int withdrawalAmount)
+void bankAccountType::withdraw(int withdrawalAmount)
 {
     balance -= withdrawalAmount;
 }
