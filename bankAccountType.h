@@ -26,4 +26,6 @@ public:
     void withdraw(int withdrawalAmount);
 
     void createMonthlyStatement();
+
+    void print();
 };
