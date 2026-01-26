@@ -1,6 +1,6 @@
 #include "bankAccountType.h"
 
-class certificateOfDepositType : public bankAccount
+class certificateOfDepositType : public bankAccountType
 {
 public:
     double interestRate;
