@@ -10,4 +10,4 @@ checkingAccountType::checkingAccountType(string name, int accountNumber, double 
 
 };
 
-void writeChecks(double amount){};
+void checkingAccountType::writeCheck(double amount){};

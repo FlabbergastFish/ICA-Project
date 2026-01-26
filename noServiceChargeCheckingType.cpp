@@ -49,8 +49,9 @@ void noServiceChargeCheckingType::writeCheck(double amount)
 	}
 }
 
-//void noServiceChargeCheckingType::createMonthlyStatement()
-
+void noServiceChargeCheckingType::createMonthlyStatement(){
+	cout << "monthly statment" << endl;
+}
 
 
 void noServiceChargeCheckingType::print()
