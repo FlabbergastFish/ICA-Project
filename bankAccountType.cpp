@@ -1,31 +1,31 @@
 #include "bankAccountType.h"
 
-string bankAccount::getAccountName()
+string bankAccountType::getAccountName()
 {
     return this->name;
 }
 
-int bankAccount::getAccountNumber()
+int bankAccountType::getAccountNumber()
 {
     return this->accountNumber;
 }
 
-int bankAccount::getBalance()
+int bankAccountType::getBalance()
 {
     return balance;
 }
 
-void bankAccount::makeDeposit(int depositAmount)
+void bankAccountType::makeDeposit(int depositAmount)
 {
     balance += depositAmount;
 }
 
-void bankAccount::makeWithdrawal(int withdrawalAmount)
+void bankAccountType::makeWithdrawal(int withdrawalAmount)
 {
     balance -= withdrawalAmount;
 }
 
-void bankAccount::createMonthlyStatement()
+void bankAccountType::createMonthlyStatement()
 {
     cout << "I'm a monthly statement!";
 }
