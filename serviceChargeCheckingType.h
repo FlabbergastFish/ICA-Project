@@ -1,28 +1,37 @@
 #ifndef SERVICE_CHARGE_CHECKING_TYPE_H
 #define SERVICE_CHARGE_CHECKING_TYPE_H
 
+#include <string>
 #include "checkingAccountType.h"
+using namespace std;
 
 class serviceChargeCheckingType : public checkingAccountType
 {
-private:
-        int numChecks;
-        double checkFee;
+        public:
+                serviceChargeCheckingType(string name, int accountNumber, double balance);
+                serviceChargeCheckingType(string name, int accountNumber, double balance,
+                                                                                  double servChargeAmount, double servChargeCheck);
 
-public:
-        // constructor
-        serviceChargeCheckingType(string name, int accountNumber, double balance, double minBalance,
-                                                                          double charge, double fee);
+                double getServiceChargeAccount();
+                void setServiceChargeAccount(double amount);
+                double getServiceChargeChecks();
+                void setServiceChargeChecks(double amount);
+                int getNumberOfChecksWritten();
+                void setNumberOfChecksWritten(int num);
+                void postServiceCharge();
+                void writeChecks(double amount);
+                virtual void createMonthlyStatement();
+                virtual void print();
 
-        void writeCheck(double amount);
+        protected:
+                double serviceChargeAccount;
+                double serviceChargeCheck;
+                int numberOfChecksWritten;
 
-        int getNumChecks() const;
-        double getCheckFee() const;
-        void setCheckFee(double fee);
-        void resetNumChecks();
-
-        // destructor
-        ~serviceChargeCheckingType() {}
+        private:
+                static const double ACCOUNT_SERVICE_CHARGE; // = 10.00;
+                static const int MAXIMUM_NUM_OF_CHECKS; // = 5;
+                static const double SERVICE_CHARGE_EXCESS_NUM_OF_CHECKS; // = 5;
 };
 
 #endif
