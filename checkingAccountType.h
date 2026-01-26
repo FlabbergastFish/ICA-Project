@@ -10,8 +10,8 @@ using namespace std;
 class checkingAccountType: public bankAccountType
 {
 //private:
-//      double minimumBalance:
-//      double serviceCharge:
+//      double minimumBalance;
+//      double serviceCharge;
 
 public:
         // constructor
