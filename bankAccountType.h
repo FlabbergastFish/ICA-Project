@@ -1,3 +1,4 @@
+#pragma once
 #include <iomanip>
 #include <iostream>
 using namespace std;
@@ -14,33 +15,15 @@ public:
         this->balance = balance;
     }
 
-    string getAccountName()
-    {
-        return this->name;
-    }
+    string getAccountName();
 
-    int getAccountNumber()
-    {
-        return this->accountNumber;
-    }
+    int getAccountNumber();
 
-    int getBalance()
-    {
-        return balance;
-    }
+    int getBalance();
 
-    void makeDeposit(int depositAmount)
-    {
-        balance += depositAmount;
-    }
+    void makeDeposit(int depositAmount);
 
-    void makeWithdrawal(int withdrawalAmount)
-    {
-        balance -= withdrawalAmount;
-    }
+    void makeWithdrawal(int withdrawalAmount);
 
-    void createMonthlyStatement()
-    {
-        cout << "I'm a monthly statement!";
-    }
+    void createMonthlyStatement();
 };
