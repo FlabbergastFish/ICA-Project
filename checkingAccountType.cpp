@@ -4,9 +4,10 @@
 
 using namespace std;
 
-checkingAccountType::checkingAccountType(string name, int accountNumber,
-                                                                                        double balance)
-        : bankAccountType(double minBalance, double charge);
+checkingAccountType::checkingAccountType(string name, int accountNumber, double balance)
+        : bankAccountType(name, accountNumber, balance){
 
-{
-}
+
+};
+
+void writeChecks(double amount){};

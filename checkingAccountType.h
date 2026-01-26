@@ -17,7 +17,7 @@ public:
         // constructor
         checkingAccountType(string name, int accountNumber, double balance);
 
-        virtual void writeCheck(double amount) = 0;
+        virtual void writeCheck(double amount);
 
 //      double getMinimumBalance() const;
 //      double getServiceCharge() const;

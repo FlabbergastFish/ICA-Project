@@ -13,7 +13,7 @@ class highInterestCheckingType : public noServiceChargeCheckingType{
 				         double minBalance, double intRate);
 
 		double getInterestRate();
-		void setInerestRate(double intRate);
+		void setInterestRate(double intRate);
 		void postInterest();
 		void createMonthlyStatement();
 		virtual void print();

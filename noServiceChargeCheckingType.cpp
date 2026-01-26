@@ -32,9 +32,9 @@ double noServiceChargeCheckingType::getMinimumBalance()
 	return minimumBalance;
 }
 
-void noServiceChargeCheckingType::setMinimumBalnce(double minBalnce)
+void noServiceChargeCheckingType::setMinimumBalance(double minBalnce)
 {
-	minimumBalnce = minBalance;
+	minimumBalance = minBalnce;
 }
 
 bool noServiceChargeCheckingType::verifyMinimumBalance(double amount)
@@ -49,13 +49,13 @@ void noServiceChargeCheckingType::writeCheck(double amount)
 	}
 }
 
-void noServiceChargeCheckingType::createMonthlyStatement()
-{
-}
+//void noServiceChargeCheckingType::createMonthlyStatement()
+
+
 
 void noServiceChargeCheckingType::print()
 {
 	cout << fixed << showpoint << setprecision(2);
-	cout << "No Service Charge Check. " << getName() << "\t ACCT# " 
+	cout << "No Service Charge Check. " << name << "\t ACCT# " 
 	     << getAccountNumber() << "\tBalance: $" << getBalance();
 }

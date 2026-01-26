@@ -48,6 +48,6 @@ void highInterestCheckingType::createMonthlyStatement()
 void highInterestCheckingType::print()
 {
 	cout << fixed << showpoint << setprecision(2);
-	cout << "Higher Interest Checking: " << getName() << "\t ACCT# " 
+	cout << "Higher Interest Checking: " << name << "\t ACCT# " 
 	     << getAccountNumber() << "\tBalance: $" << getBalance();
 }
