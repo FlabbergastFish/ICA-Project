@@ -25,7 +25,7 @@ public:
 
     void withdraw(int withdrawalAmount);
 
-    void createMonthlyStatement();
+    virtual void createMonthlyStatement() = 0;
 
     void print();
 };
