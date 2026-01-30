@@ -25,11 +25,6 @@ void bankAccountType::withdraw(int withdrawalAmount)
     balance -= withdrawalAmount;
 }
 
-void bankAccountType::createMonthlyStatement()
-{
-    cout << "I'm a monthly statement!";
-}
-
 void bankAccountType::print()
 {
     cout << "printed!" << endl;
