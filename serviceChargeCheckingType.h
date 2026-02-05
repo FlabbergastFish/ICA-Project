@@ -10,7 +10,7 @@ class serviceChargeCheckingType : public checkingAccountType
         public:
                 serviceChargeCheckingType(string name, int accountNumber, double balance);
                 serviceChargeCheckingType(string name, int accountNumber, double balance,
-                                                                                  double servChargeAmount, double servChargeCheck);
+                                          double servChargeAmount, double servChargeCheck);
 
                 double getServiceChargeAccount();
                 void setServiceChargeAccount(double amount);
@@ -20,6 +20,7 @@ class serviceChargeCheckingType : public checkingAccountType
                 void setNumberOfChecksWritten(int num);
                 void postServiceCharge();
                 void writeChecks(double amount);
+					 virtual void withdraw(int withdrawalAmount) override;
                 virtual void createMonthlyStatement();
                 virtual void print();
 

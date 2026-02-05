@@ -17,12 +17,16 @@ int bankAccountType::getBalance()
 
 void bankAccountType::makeDeposit(int depositAmount)
 {
+	 cout << "Base class deposit: Adding $" << depositAmount << " to account.\n";
     balance += depositAmount;
+	 cout << "New balance: $" << balance << endl;
 }
 
 void bankAccountType::withdraw(int withdrawalAmount)
 {
+	 cout << "Base class withdrawal: Removing $" << withdrawalAmount << "From account.\n";
     balance -= withdrawalAmount;
+	 cout << "New balance: $" << balance << endl;
 }
 
 void bankAccountType::print()

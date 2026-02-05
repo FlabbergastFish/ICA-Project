@@ -9,15 +9,14 @@ using namespace std;
 
 class checkingAccountType: public bankAccountType
 {
-//private:
-//      double minimumBalance;
-//      double serviceCharge;
-
 public:
         // constructor
         checkingAccountType(string name, int accountNumber, double balance);
 
         virtual void writeCheck(double amount);
+		  virtual void withdraw(int withdrawalAmount) override;
+		  virtual void makeDeposit(int depositAmount) override;
+			virtual void createMonthlyStatement() override;
 
 //      double getMinimumBalance() const;
 //      double getServiceCharge() const;
@@ -26,7 +25,7 @@ public:
 //      void setServiceCharge(double charge);
 
         // destructor
-//      virtual ~checkingAccountType() {}
+		  virtual ~checkingAccountType() {}
 };
 
 #endif

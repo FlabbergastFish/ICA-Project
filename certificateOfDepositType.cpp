@@ -10,3 +10,8 @@ certificateOfDepositType::certificateOfDepositType(string name,
       currentCDMonth(currentCDMonth)
 {
 }
+
+void certificateOfDepositType::createMonthlyStatement(){
+	cout << "This is a monthly statement";
+}
+

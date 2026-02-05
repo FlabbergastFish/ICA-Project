@@ -13,12 +13,31 @@ savingsAccountType::savingsAccountType(string name,int accountNumber, int balanc
 double savingsAccountType:: getInterestRate(){
 	return savingsIntRate;
 }
-	
+
+void savingsAccountType::withdraw(int withdrawalAmount){
+	cout << "SAVINGS withdrawal:\n";
+	if (balance - withdrawalAmount < minimumBalance){
+		cout << "ERROR: Withdrawal would bring balance below minimum of $" << minimumBalance << endl;
+		cout << "Current balance: $" << balance << ", Attempted withdrawal: $" << withdrawalAmount << endl;
+	}
+	else{
+		balance -= withdrawalAmount;
+		cout << "Withdrawal successful: $" << withdrawalAmount << endl;
+		cout << "New balance: $" << balance << endl;
+	}
+}
+
+void savingsAccountType::makeDeposit(int depositAmount){
+	cout << "SAVINGS deposit: Adding $" << depositAmount << endl;
+	balance += depositAmount;
+	cout << "New balance: $" << balance << endl;
+}
+
 void savingsAccountType:: createMonthlyStatement(){
 	cout << "your balance was <balance> and for the month you made <interest earned>" << endl;
 	}
 
-	
+
 void savingsAccountType:: print(){
 	cout << "your account details are <account details>" << endl;
 	}

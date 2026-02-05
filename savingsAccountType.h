@@ -12,12 +12,15 @@ class savingsAccountType: public bankAccountType{
 	savingsAccountType(string name, int accountNumber, int balance);
 
 	double getInterestRate();
+	virtual void withdraw(int withdrawalAmount) override; // Override withdraw
+	virtual void makeDeposit(int depositAmount) override; // Override deposit
 	virtual void createMonthlyStatement();
 	virtual void print();
 
 
 	private:
 	const double savingsIntRate = 0.03;
+	const int minimumBalance = 500;
 
 };
 #endif

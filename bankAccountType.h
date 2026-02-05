@@ -21,11 +21,13 @@ public:
 
     int getBalance();
 
-    void makeDeposit(int depositAmount);
+    virtual void makeDeposit(int depositAmount);
 
-    void withdraw(int withdrawalAmount);
+    virtual void withdraw(int withdrawalAmount);
 
     virtual void createMonthlyStatement() = 0;
 
-    void print();
+    virtual void print();
+
+	 virtual ~bankAccountType() {};
 };

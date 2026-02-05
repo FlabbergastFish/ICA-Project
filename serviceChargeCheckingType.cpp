@@ -19,14 +19,23 @@ serviceChargeCheckingType::serviceChargeCheckingType(string name, int accountNum
 }
 
 serviceChargeCheckingType::serviceChargeCheckingType(string name, int accountNumber,
-                                                                                        double balance,
-                                                                                        double servChargeAmount,
-                                                                                        double servChargeCheck)
-                                                                : checkingAccountType(name, accountNumber, balance)
+                                                     double balance,
+                                                     double servChargeAmount,
+                                                     double servChargeCheck)
+                                                 : checkingAccountType(name, accountNumber, balance)
 {
         serviceChargeAccount = servChargeAmount;
         serviceChargeCheck = servChargeCheck;
         numberOfChecksWritten = 0;
+}
+
+void serviceChargeCheckingType::withdraw(int withdrawalAmount)
+{
+	const double EXTRA_SERVICE_FEE = 5.00;
+	cout << "SERVICE CHARGE CHECKING withdrawal: $" << withdrawalAmount << " + $"
+		  << EXTRA_SERVICE_FEE << " service fee\n";
+	balance -= (withdrawalAmount + EXTRA_SERVICE_FEE);
+	cout << "New balance: $" << balance << endl;
 }
 
 double serviceChargeCheckingType::getServiceChargeAccount()
