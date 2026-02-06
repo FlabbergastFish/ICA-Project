@@ -1,23 +1,40 @@
-#ifndef HELPER_H_
-#define HELPER_H_
+#ifndef HELPERS_H_
+#define HELPERS_H_
 
-#include <string> /* string */
-#include <vector> /* string */
+#include <string>     /* string */
+#include <vector>     /* string */
+#include <filesystem> /* path, exists, is_directory, filename, string, steam */
+#include <fstream>    /* ifstream */
+#include <iostream>   /* cerr */
+#include "bankAccountType.h"
+#include "savingsAccountType.h"
+#include "highInterestSavingsType.h"
+#include "noServiceChargeCheckingType.h"
+#include "serviceChargeCheckingType.h"
+#include "highInterestCheckingType.h"
+#include "certificateOfDepositType.h"
+#include "checkingAccountType.h"
 #include "bankAccountType.h"
 
+const string ACCOUNTS_DIR = "data/accounts";
+const string USER_DATA_FILE = "data.txt";
+enum bankingType{SAVINGS, HIGH_INTEREST_SAVINGS, NO_SERVICE_CHARGE_CHECKING, SERVICE_CHARGE_CHECKING, HIGH_INTEREST_CHECKING, CERTIFICATE_OF_DEPOSIT};
+
 using namespace std;
+namespace fs = filesystem;
 
 struct User {
 	string username;
 	string name;
 	string salt;
+	string password;
 	vector<bankAccountType *> accounts;
+	vector<vector<double>> transactions;
 };
 
-void InitializeAccount(User &user);
+// Load user and account data into struct
+bool InitializeAccount(vector<User> &user);
 
-void InitializeAccount(User &user){
+double sumTransactions(User user, int index);
 
-}
-
-#endif /* HELPER_H_ */
+#endif /* HELPERS_H_ */
