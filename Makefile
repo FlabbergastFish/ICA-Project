@@ -1,4 +1,4 @@
-CFLAGS = -std=c++20 -O0 -g -Iincludes
+CFLAGS = -Wall -Werror -Wpedantic -std=c++20 -O0 -g -Iincludes
 CC = g++
 
 SRC_DIR = src
