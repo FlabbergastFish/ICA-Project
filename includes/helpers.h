@@ -3,9 +3,11 @@
 
 #include <string>     /* string */
 #include <vector>     /* string */
-#include <filesystem> /* path, exists, is_directory, filename, string, steam */
+#include <filesystem> /* path, exists, is_directory, filename, string, stem */
 #include <fstream>    /* ifstream */
 #include <iostream>   /* cerr */
+#include <ios>        /* streamsize */
+#include <limits>     /* numeric_limits */
 #include "bankAccountType.h"
 #include "savingsAccountType.h"
 #include "highInterestSavingsType.h"
@@ -33,8 +35,8 @@ struct User {
 };
 
 // Load user and account data into struct
-bool InitializeAccount(vector<User> &user);
+bool InitializeAccounts(vector<User> &user);
 
-double sumTransactions(User user, int index);
+double sumTransactions(const User &user, int accountIndex);
 
 #endif /* HELPERS_H_ */

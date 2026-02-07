@@ -1,40 +1,45 @@
 #include "helpers.h"
 
 // Load user and account data into struct
-bool InitializeAccount(vector<User> &userAccounts) {
+bool InitializeAccounts(vector<User> &userAccounts) {
     fs::path userPath = fs::path(ACCOUNTS_DIR);
     ifstream inFile;
     bankingType accountType;
-    string accountTypeStr;
+    int accountTypeInt;
     double interestRate;
     int currentCDMonth;
     int userCounter = 0;
     int accountCounter = 0;
-    User blankUser;
     double currTransaction;
     int accountNumber;
     string name;
 
     if (!fs::exists(userPath)) {
-        cerr << "\n*** Could not find accounts directory. Accounts not initialized ***\n\n";
-            return false;
+        cerr << "\n*** Could not find accounts directory. Users not initialized ***\n\n";
+        return false;
     }
 
-    // TODO: EMPTY ACCOUNTS DIR CHECK
+    if (fs::is_empty(userPath)) {
+        cerr << "\n*** No user directories in accounts directory. Users not initialized ***\n\n";
+        return false;
+    }
 
-    accountCounter = 0;
     for(const fs::directory_entry &userDir : fs::directory_iterator(userPath)) {
-        inFile.open(userDir.path() / USER_DATA_FILE);
-
-        if (!inFile.is_open()) {
-            cerr << "\n*** File is not open. Account not initialized **\n\n";
+        if (!userDir.is_directory()){
             continue;
         }
 
-        // TODO: ENSURE BLANK USER ACTUALLY BLANK
+        inFile.open(userDir.path() / USER_DATA_FILE);
+
+        if (!inFile.is_open()) {
+            cerr << "\n*** File is not open. User not initialized **\n\n";
+            continue;
+        }
+
+        User blankUser = {};
         userAccounts.push_back(blankUser);
 
-        userAccounts[userCounter].username = userDir.path().filename().stem().string();
+        userAccounts[userCounter].username = userDir.path().filename().string();
 
 
         getline(inFile, userAccounts[userCounter].name);
@@ -42,6 +47,7 @@ bool InitializeAccount(vector<User> &userAccounts) {
 
         inFile.close();
 
+        accountCounter = 0;
         for (const fs::directory_entry &file : fs::directory_iterator(userPath / userAccounts[userCounter].username)) {
             if (file.is_directory() || file.path().filename().string() == USER_DATA_FILE) {
                 continue;
@@ -50,39 +56,23 @@ bool InitializeAccount(vector<User> &userAccounts) {
             inFile.open(file.path());
 
             if (!inFile.is_open()) {
-                cerr << "\n*** File is not open. Account partially Initialized ***\n\n";
+                cerr << "\n*** File is not open. Account data not initialized ***\n\n";
                 continue;
             }
 
-            getline(inFile, accountTypeStr);
+            inFile >> accountTypeInt;
+            
+            if(accountTypeInt < 0 || accountTypeInt > 5){
+                cerr << file.path().filename().string() << endl;
+                cerr << "\n*** Invalid account type. Account data not initialized ***\n\n";
+                continue;
+            }
+            
+            accountType = bankingType(accountTypeInt);
         
-            if(accountTypeStr == "Savings"){
-                accountType = SAVINGS;
-            }
-
-            else if(accountTypeStr == "High Interest Savings"){
-                accountType = HIGH_INTEREST_SAVINGS; 
-            } 
-
-            else if(accountTypeStr == "No Service Charge Checking"){
-                accountType = NO_SERVICE_CHARGE_CHECKING;
-            }
-
-            else if(accountTypeStr == "Service Charge Checking"){
-                accountType = SERVICE_CHARGE_CHECKING;
-            }
-
-            else if(accountTypeStr == "High Interest Checking"){
-                accountType = HIGH_INTEREST_CHECKING;
-            }
-
-            else if(accountTypeStr == "Certificate of Deposit"){
-                accountType = CERTIFICATE_OF_DEPOSIT;
+            if(accountType == CERTIFICATE_OF_DEPOSIT){
                 inFile >> interestRate;
                 inFile >> currentCDMonth;
-            }
-            else{
-                continue;
             }
 
             userAccounts[userCounter].transactions.push_back(vector<double>());
@@ -96,29 +86,30 @@ bool InitializeAccount(vector<User> &userAccounts) {
 
             switch(accountType){
                 case SAVINGS:
-                    userAccounts[userCounter].accounts.push_back(new savingsAccountType(name, accountNumber, sumTransactions));
+                    userAccounts[userCounter].accounts.push_back(new savingsAccountType(name, accountNumber, sumTransactions(userAccounts[userCounter], accountCounter)));
                     break;
 
                 case HIGH_INTEREST_SAVINGS:
-                    userAccounts[userCounter].accounts.push_back(new highInterestSavingsType(name, accountNumber, sumTransactions));
+                    userAccounts[userCounter].accounts.push_back(new highInterestSavingsType(name, accountNumber, sumTransactions(userAccounts[userCounter], accountCounter)));
                     break;
 
                 case NO_SERVICE_CHARGE_CHECKING:
-                    userAccounts[userCounter].accounts.push_back(new noServiceChargeCheckingType(name, accountNumber, sumTransactions));
+                    userAccounts[userCounter].accounts.push_back(new noServiceChargeCheckingType(name, accountNumber, sumTransactions(userAccounts[userCounter], accountCounter)));
                     break;
 
                 case SERVICE_CHARGE_CHECKING: 
-                    userAccounts[userCounter].accounts.push_back(new serviceChargeCheckingType(name, accountNumber, sumTransactions));
+                    userAccounts[userCounter].accounts.push_back(new serviceChargeCheckingType(name, accountNumber, sumTransactions(userAccounts[userCounter], accountCounter)));
                     break;
 
-                    case HIGH_INTEREST_CHECKING:
-                    userAccounts[userCounter].accounts.push_back(new highInterestCheckingType(name, accountNumber, sumTransactions));
+                case HIGH_INTEREST_CHECKING:
+                    userAccounts[userCounter].accounts.push_back(new highInterestCheckingType(name, accountNumber, sumTransactions(userAccounts[userCounter], accountCounter)));
                     break;
 
                 case CERTIFICATE_OF_DEPOSIT:
-                    userAccounts[userCounter].accounts.push_back(new certificateOfDepositType(name, accountNumber, sumTransactions, interestRate, currentCDMonth));
+                    userAccounts[userCounter].accounts.push_back(new certificateOfDepositType(name, accountNumber, sumTransactions(userAccounts[userCounter], accountCounter), interestRate, currentCDMonth));
                     break;
                 }
+                inFile.ignore(numeric_limits<streamsize>::max(),'\n');
 
             inFile.close();
             accountCounter++;
@@ -130,7 +121,7 @@ bool InitializeAccount(vector<User> &userAccounts) {
     return true;
 }
 
-double sumTransactions(User user, int accountIndex){
+double sumTransactions(const User &user, int accountIndex){
     double balance = 0;
 
     for(const double &amount : user.transactions[accountIndex]){
