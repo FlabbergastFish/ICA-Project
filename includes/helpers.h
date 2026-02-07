@@ -30,13 +30,18 @@ struct User {
 	string name;
 	string salt;
 	string password;
+	bool manager = false;
 	vector<bankAccountType *> accounts;
 	vector<vector<double>> transactions;
 };
 
-// Load user and account data into struct
-bool InitializeAccounts(vector<User> &user);
+// Load user and account data into vector of structs
+bool InitializeUsers(vector<User> &userAccounts);
 
+// Load user and account data into struct
+bool InitializeUser(User &userAccount, vector<User> &userAccounts);
+
+// Sum all transactions in an account
 double sumTransactions(const User &user, int accountIndex);
 
 #endif /* HELPERS_H_ */

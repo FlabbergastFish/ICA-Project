@@ -6,9 +6,13 @@ using namespace std;
 
 int main()
 {
-	vector<User> accounts;
+	User user; // The actual user signed in
+	vector<User> users; // All accounts at bank if user.manager = true
 
-	InitializeAccount(accounts);
+	// Set at login. All that needs set for init.
+	user.username = "j_doe";
+
+	InitializeUser(user, users);
 
 	return 0;
 }
