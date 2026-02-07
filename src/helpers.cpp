@@ -1,7 +1,7 @@
 #include "helpers.h"
 
-// Load user and account data into struct
-bool InitializeAccounts(vector<User> &userAccounts) {
+// Load user and account data into vector of structs
+bool InitializeUsers(vector<User> &userAccounts) {
     fs::path userPath = fs::path(ACCOUNTS_DIR);
     ifstream inFile;
     bankingType accountType;
@@ -25,7 +25,7 @@ bool InitializeAccounts(vector<User> &userAccounts) {
     }
 
     for(const fs::directory_entry &userDir : fs::directory_iterator(userPath)) {
-        if (!userDir.is_directory()){
+        if (!userDir.is_directory()) {
             continue;
         }
 
@@ -43,6 +43,8 @@ bool InitializeAccounts(vector<User> &userAccounts) {
 
 
         getline(inFile, userAccounts[userCounter].name);
+        inFile >> userAccounts[userCounter].manager;
+        inFile.ignore(numeric_limits<streamsize>::max(),'\n');
         getline(inFile, userAccounts[userCounter].salt);
 
         inFile.close();
@@ -62,7 +64,7 @@ bool InitializeAccounts(vector<User> &userAccounts) {
 
             inFile >> accountTypeInt;
             
-            if(accountTypeInt < 0 || accountTypeInt > 5){
+            if(accountTypeInt < 0 || accountTypeInt > 5) {
                 cerr << file.path().filename().string() << endl;
                 cerr << "\n*** Invalid account type. Account data not initialized ***\n\n";
                 continue;
@@ -70,7 +72,7 @@ bool InitializeAccounts(vector<User> &userAccounts) {
             
             accountType = bankingType(accountTypeInt);
         
-            if(accountType == CERTIFICATE_OF_DEPOSIT){
+            if(accountType == CERTIFICATE_OF_DEPOSIT) {
                 inFile >> interestRate;
                 inFile >> currentCDMonth;
             }
@@ -84,7 +86,7 @@ bool InitializeAccounts(vector<User> &userAccounts) {
             accountNumber = stoi(file.path().filename().stem().string());
             name = userAccounts[userCounter].name;
 
-            switch(accountType){
+            switch(accountType) {
                 case SAVINGS:
                     userAccounts[userCounter].accounts.push_back(new savingsAccountType(name, accountNumber, sumTransactions(userAccounts[userCounter], accountCounter)));
                     break;
@@ -108,8 +110,9 @@ bool InitializeAccounts(vector<User> &userAccounts) {
                 case CERTIFICATE_OF_DEPOSIT:
                     userAccounts[userCounter].accounts.push_back(new certificateOfDepositType(name, accountNumber, sumTransactions(userAccounts[userCounter], accountCounter), interestRate, currentCDMonth));
                     break;
-                }
-                inFile.ignore(numeric_limits<streamsize>::max(),'\n');
+            }
+            
+            inFile.ignore(numeric_limits<streamsize>::max(),'\n');
 
             inFile.close();
             accountCounter++;
@@ -121,10 +124,133 @@ bool InitializeAccounts(vector<User> &userAccounts) {
     return true;
 }
 
-double sumTransactions(const User &user, int accountIndex){
+// Load user and account data into struct
+bool InitializeUser(User &userAccount, vector<User> &userAccounts) {
+    fs::path userPath = fs::path(ACCOUNTS_DIR);
+    ifstream inFile;
+    bankingType accountType;
+    int accountTypeInt;
+    double interestRate;
+    int currentCDMonth;
+    int userCounter = 0;
+    int accountCounter = 0;
+    double currTransaction;
+    int accountNumber;
+    string name;
+
+    if (!fs::exists(userPath)) {
+        cerr << "\n*** Could not find accounts directory. Users not initialized ***\n\n";
+        return false;
+    }
+
+    if (fs::is_empty(userPath)) {
+        cerr << "\n*** No user directories in accounts directory. User not initialized ***\n\n";
+        return false;
+    }
+
+    userPath = userPath / userAccount.username;
+
+    if (!fs::directory_entry(userPath).is_directory()) {
+        return false;
+    }
+
+    inFile.open(userPath / USER_DATA_FILE);
+
+    if (!inFile.is_open()) {
+        cerr << "\n*** File is not open. User not initialized **\n\n";
+        return false;
+    }
+
+    userAccount.username = userPath.filename().string();
+
+
+    getline(inFile, userAccount.name);
+    inFile >> userAccount.manager;
+    inFile.ignore(numeric_limits<streamsize>::max(),'\n');
+    getline(inFile, userAccount.salt);
+
+    inFile.close();
+
+    if (userAccount.manager == 1) {
+        InitializeUsers(userAccounts);
+    }
+
+    accountCounter = 0;
+    for (const fs::directory_entry &file : fs::directory_iterator(userPath)) {
+        if (file.is_directory() || file.path().filename().string() == USER_DATA_FILE) {
+            continue;
+        }
+
+        inFile.open(file.path());
+
+        if (!inFile.is_open()) {
+            cerr << "\n*** File is not open. Account data not initialized ***\n\n";
+            continue;
+        }
+
+        inFile >> accountTypeInt;
+        
+        if(accountTypeInt < 0 || accountTypeInt > 5) {
+            cerr << file.path().filename().string() << endl;
+            cerr << "\n*** Invalid account type. Account data not initialized ***\n\n";
+            continue;
+        }
+        
+        accountType = bankingType(accountTypeInt);
+    
+        if(accountType == CERTIFICATE_OF_DEPOSIT) {
+            inFile >> interestRate;
+            inFile >> currentCDMonth;
+        }
+
+        userAccount.transactions.push_back(vector<double>());
+
+        while(inFile >> currTransaction) {
+            userAccount.transactions[accountCounter].push_back(currTransaction);
+        }
+
+        accountNumber = stoi(file.path().filename().stem().string());
+        name = userAccount.name;
+
+        switch(accountType) {
+            case SAVINGS:
+                userAccount.accounts.push_back(new savingsAccountType(name, accountNumber, sumTransactions(userAccount, accountCounter)));
+                break;
+
+            case HIGH_INTEREST_SAVINGS:
+                userAccount.accounts.push_back(new highInterestSavingsType(name, accountNumber, sumTransactions(userAccount, accountCounter)));
+                break;
+
+            case NO_SERVICE_CHARGE_CHECKING:
+                userAccount.accounts.push_back(new noServiceChargeCheckingType(name, accountNumber, sumTransactions(userAccount, accountCounter)));
+                break;
+
+            case SERVICE_CHARGE_CHECKING: 
+                userAccount.accounts.push_back(new serviceChargeCheckingType(name, accountNumber, sumTransactions(userAccount, accountCounter)));
+                break;
+
+            case HIGH_INTEREST_CHECKING:
+                userAccount.accounts.push_back(new highInterestCheckingType(name, accountNumber, sumTransactions(userAccount, accountCounter)));
+                break;
+
+            case CERTIFICATE_OF_DEPOSIT:
+                userAccount.accounts.push_back(new certificateOfDepositType(name, accountNumber, sumTransactions(userAccount, accountCounter), interestRate, currentCDMonth));
+                break;
+        }
+
+        inFile.ignore(numeric_limits<streamsize>::max(),'\n');
+
+        inFile.close();
+        accountCounter++;
+    }
+
+    return true;
+}
+
+double sumTransactions(const User &user, int accountIndex) {
     double balance = 0;
 
-    for(const double &amount : user.transactions[accountIndex]){
+    for(const double &amount : user.transactions[accountIndex]) {
         balance += amount;
     }
 
