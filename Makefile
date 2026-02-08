@@ -39,5 +39,8 @@ checkingAccountType.o: $(SRC_DIR)/checkingAccountType.cpp $(INCLUDE_DIR)/checkin
 helpers.o: $(SRC_DIR)/helpers.cpp $(INCLUDE_DIR)/helpers.h
 	$(CC) $(CFLAGS) -c $<
 
+transfersAndWire.o: $(SRC_DIR)/transfersAndWire.cpp $(INCLUDE_DIR)/transfersAndWire.h
+	$(CC) $(CFLAGS) -c $<
+
 clean:
 	rm -f banking-app *.o *~

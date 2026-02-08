@@ -9,7 +9,7 @@ double highInterestSavingsType::getMinBalance(){
 	return MIN_BALANCE;
 }
 
-void highInterestSavingsType::withdraw(double amount){
+void highInterestSavingsType::withdraw(int amount){
 	if(highInterestSavingsType::getMinBalance() <= balance - amount){
 		balance = balance - amount;
 	}

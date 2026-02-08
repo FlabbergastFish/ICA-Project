@@ -11,7 +11,7 @@ public:
 
 
 	double getMinBalance();
-	void withdraw(double amount);
+	void withdraw(int amount);
 	void print();
 
 private:
