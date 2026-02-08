@@ -1,8 +1,8 @@
-#ifndef HELPERS_H_
-#define HELPERS_H_
+#ifndef USER_TYPE_H_
+#define USER_TYPE_H_
 
 #include <string>     /* string */
-#include <vector>     /* string */
+#include <vector>     /* vector */
 #include <filesystem> /* path, exists, is_directory, filename, string, stem */
 #include <fstream>    /* ifstream */
 #include <iostream>   /* cerr */
@@ -16,7 +16,6 @@
 #include "highInterestCheckingType.h"
 #include "certificateOfDepositType.h"
 #include "checkingAccountType.h"
-#include "bankAccountType.h"
 
 const string ACCOUNTS_DIR = "data/accounts";
 const string USER_DATA_FILE = "data.txt";
@@ -25,7 +24,16 @@ enum bankingType{SAVINGS, HIGH_INTEREST_SAVINGS, NO_SERVICE_CHARGE_CHECKING, SER
 using namespace std;
 namespace fs = filesystem;
 
-struct User {
+class userType {
+	public:
+	userType();
+
+	// Load user and account data into vector of structs
+	bool Initialize();
+
+	// Sum all transactions in an account
+	double sumTransactions(int accountIndex) const;
+
 	string username;
 	string name;
 	string salt;
@@ -33,15 +41,7 @@ struct User {
 	bool manager = false;
 	vector<bankAccountType *> accounts;
 	vector<vector<double>> transactions;
+
 };
 
-// Load user and account data into vector of structs
-bool InitializeUsers(vector<User> &userAccounts);
-
-// Load user and account data into struct
-bool InitializeUser(User &userAccount, vector<User> &userAccounts);
-
-// Sum all transactions in an account
-double sumTransactions(const User &user, int accountIndex);
-
-#endif /* HELPERS_H_ */
+#endif /* USER_TYPE_H_ */

@@ -4,12 +4,12 @@ CC = g++
 SRC_DIR = src
 INCLUDE_DIR = includes
 
-OBJECTS = main.o bankAccountType.o savingsAccountType.o highInterestSavingsType.o certificateOfDepositType.o serviceChargeCheckingType.o checkingAccountType.o noServiceChargeCheckingType.o highInterestCheckingType.o helpers.o
+OBJECTS = main.o bankAccountType.o savingsAccountType.o highInterestSavingsType.o certificateOfDepositType.o serviceChargeCheckingType.o checkingAccountType.o noServiceChargeCheckingType.o highInterestCheckingType.o userType.o
 
 banking-app: $(OBJECTS)
 	$(CC) $(CFLAGS) -o $@ $^
 
-main.o: $(SRC_DIR)/main.cpp bankAccountType.o savingsAccountType.o highInterestSavingsType.o certificateOfDepositType.o helpers.o
+main.o: $(SRC_DIR)/main.cpp bankAccountType.o savingsAccountType.o highInterestSavingsType.o certificateOfDepositType.o userType.o
 	$(CC) $(CFLAGS) -c $<
 
 highInterestSavingsType.o: $(SRC_DIR)/highInterestSavingsType.cpp $(INCLUDE_DIR)/highInterestSavingsType.h bankAccountType.o  savingsAccountType.o
@@ -36,7 +36,7 @@ noServiceChargeCheckingType.o: $(SRC_DIR)/noServiceChargeCheckingType.cpp $(INCL
 checkingAccountType.o: $(SRC_DIR)/checkingAccountType.cpp $(INCLUDE_DIR)/checkingAccountType.h bankAccountType.o
 	$(CC) $(CFLAGS) -c $<
 
-helpers.o: $(SRC_DIR)/helpers.cpp $(INCLUDE_DIR)/helpers.h
+userType.o: $(SRC_DIR)/userType.cpp $(INCLUDE_DIR)/userType.h
 	$(CC) $(CFLAGS) -c $<
 
 transfersAndWire.o: $(SRC_DIR)/transfersAndWire.cpp $(INCLUDE_DIR)/transfersAndWire.h

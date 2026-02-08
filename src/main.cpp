@@ -1,18 +1,17 @@
 #include <iostream>
-#include "helpers.h"
+#include "userType.h"
 
 using namespace std;
 
 
 int main()
 {
-	User user; // The actual user signed in
-	vector<User> users; // All accounts at bank if user.manager = true
+	userType user; // The user signed in
 
 	// Set at login. All that needs set for init.
 	user.username = "j_doe";
 
-	InitializeUser(user, users);
+	user.Initialize();
 
 	return 0;
 }
