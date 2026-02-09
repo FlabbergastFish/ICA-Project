@@ -4,7 +4,7 @@ CC = g++
 SRC_DIR = src
 INCLUDE_DIR = includes
 
-OBJECTS = main.o bankAccountType.o savingsAccountType.o highInterestSavingsType.o certificateOfDepositType.o serviceChargeCheckingType.o checkingAccountType.o noServiceChargeCheckingType.o highInterestCheckingType.o userType.o
+OBJECTS = main.o bankAccountType.o savingsAccountType.o highInterestSavingsType.o certificateOfDepositType.o serviceChargeCheckingType.o checkingAccountType.o noServiceChargeCheckingType.o highInterestCheckingType.o userType.o transferAndWire.o
 
 banking-app: $(OBJECTS)
 	$(CC) $(CFLAGS) -o $@ $^
