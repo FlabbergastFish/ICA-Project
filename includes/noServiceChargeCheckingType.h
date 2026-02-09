@@ -16,7 +16,7 @@ class noServiceChargeCheckingType : public checkingAccountType {
 		void setMinimumBalance(double account);
 		bool verifyMinimumBalance(double amount);
 		void writeCheck(double amount);
-		void withdraw(double amount);
+		void withdraw(int amount);
 		virtual void createMonthlyStatement();
 		virtual void print();
 

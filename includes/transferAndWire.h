@@ -1,11 +1,11 @@
-#ifndef
-#define
+#ifndef TRANSFERANDWIRE_H
+#define TRANSFERANDWIRE_H
 
 #include <vector>
-#include "helpers.h"
+#include "userType.h"
 #include "bankAccountType.h"
 
-transfer(double amount, int account1, int account2){}
+void transfer(double amount, int account1, int account2);
 // account 1 is the account is the account the money will be withdrawn from and account 2 is the one being deposited into
 
 

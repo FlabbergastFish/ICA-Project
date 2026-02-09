@@ -1,10 +1,10 @@
-#include "transfersAndWire.h"
+#include "transferAndWire.h"
 
-void transfer(double amount, int account1, int account2, vector<User>& users){
+void transfer(double amount, int account1, int account2, vector<userType>& users){
 	bankAccountType* account1Ptr = nullptr;
 	bankAccountType* account2Ptr = nullptr;
-	for(int i = 0; i < users.size(); i++){
-		for(int j = 0; j < users[i].accounts.size(); j++){
+	for(size_t i = 0; i < users.size(); i++){
+		for(size_t j = 0; j < users[i].accounts.size(); j++){
 			if(users[i].accounts[j]->getAccountNumber() == account1){
 				account1Ptr = users[i].accounts[j];
 			}
@@ -20,7 +20,7 @@ void transfer(double amount, int account1, int account2, vector<User>& users){
 	}
 
 	account1Ptr -> withdraw(amount);
-	account2Ptr -> deposit(amount);
+	account2Ptr -> makeDeposit(amount);
 
 
 }

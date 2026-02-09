@@ -60,3 +60,10 @@ void noServiceChargeCheckingType::print()
 	cout << "No Service Charge Check. " << name << "\t ACCT# " 
 	     << getAccountNumber() << "\tBalance: $" << getBalance();
 }
+
+void noServiceChargeCheckingType::withdraw(int amount){
+	if(balance - amount >= noServiceChargeCheckingType::getMinimumBalance()){
+		balance =- amount;
+	}
+
+}

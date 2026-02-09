@@ -4,7 +4,7 @@ CC = g++
 SRC_DIR = src
 INCLUDE_DIR = includes
 
-OBJECTS = main.o bankAccountType.o savingsAccountType.o highInterestSavingsType.o certificateOfDepositType.o serviceChargeCheckingType.o checkingAccountType.o noServiceChargeCheckingType.o highInterestCheckingType.o userType.o
+OBJECTS = main.o bankAccountType.o savingsAccountType.o highInterestSavingsType.o certificateOfDepositType.o serviceChargeCheckingType.o checkingAccountType.o noServiceChargeCheckingType.o highInterestCheckingType.o userType.o transferAndWire.o
 
 banking-app: $(OBJECTS)
 	$(CC) $(CFLAGS) -o $@ $^
@@ -39,7 +39,7 @@ checkingAccountType.o: $(SRC_DIR)/checkingAccountType.cpp $(INCLUDE_DIR)/checkin
 userType.o: $(SRC_DIR)/userType.cpp $(INCLUDE_DIR)/userType.h
 	$(CC) $(CFLAGS) -c $<
 
-transfersAndWire.o: $(SRC_DIR)/transfersAndWire.cpp $(INCLUDE_DIR)/transfersAndWire.h
+transferAndWire.o: $(SRC_DIR)/transferAndWire.cpp $(INCLUDE_DIR)/transferAndWire.h
 	$(CC) $(CFLAGS) -c $<
 
 clean:
