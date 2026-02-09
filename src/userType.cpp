@@ -4,9 +4,9 @@ userType::userType() {
 
 }
 
-// Load user and account data into struct
+// Load user and account data
 bool userType::Initialize() {
-    fs::path userPath = fs::path(ACCOUNTS_DIR);
+    fs::path userPath = fs::path(USER_DIR);
     ifstream inFile;
     bankingType accountType;
     int accountTypeInt;
@@ -33,7 +33,7 @@ bool userType::Initialize() {
         return false;
     }
 
-    inFile.open(userPath / USER_DATA_FILE);
+    inFile.open(userPath / DATA_FILE);
 
     if (!inFile.is_open()) {
         cerr << "\n*** File is not open. User not initialized **\n\n";
@@ -53,7 +53,7 @@ bool userType::Initialize() {
     accountCounter = 0;
 
     for (const fs::directory_entry &file : fs::directory_iterator(userPath)) {
-        if (file.is_directory() || file.path().filename().string() == USER_DATA_FILE) {
+        if (file.is_directory() || file.path().filename().string() == DATA_FILE) {
             continue;
         }
 
@@ -121,6 +121,100 @@ bool userType::Initialize() {
     }
 
     return true;
+}
+
+void userType::transfer(double amount, int account1, int account2) {
+    fs::path userPath = fs::path(USER_DIR);
+    fs::path depositUserPath;
+    bool accountFound = false;
+    bool ownAccount = false;
+    int account1Index = 0;
+    int account2Index = 0;
+    ofstream transferFile;
+
+    if(amount < 0) {
+        cerr << "\n*** Cannot transfer a negative amount ***\n\n";
+        return;
+    }
+
+    for(bankAccountType* account : this -> accounts) {
+        if(account -> getAccountNumber() == account1) {
+            accountFound = true;
+            break;
+        }
+
+        account1Index++;
+    }
+
+    if(this ->accounts[account1Index] -> getBalance() <= amount) {
+        return;
+    }
+
+    if (!accountFound) {
+        cerr << "\n*** Account 1 not found ***\n\n";
+        return;
+    }
+
+    accountFound = false;
+
+    for(const fs::directory_entry &user : fs::directory_iterator(USER_DIR)) {
+        for(const fs::directory_entry &account : fs::directory_iterator(user)) {
+            if(account.is_directory() || account.path().filename().string() == DATA_FILE) {
+                continue;
+            }
+
+            if(stoi(account.path().filename().stem().string()) == account2) {
+                if(user.path().filename().string() == this -> username) {
+                    ownAccount = true;
+                }
+
+                accountFound = true;
+                depositUserPath = account.path().parent_path();
+                break;
+            }
+
+            account2Index++;
+        }
+
+        if(accountFound) {
+            break;
+        }
+
+        account2Index = 0;
+    }
+
+    if (!accountFound) {
+        cerr << "\n*** Account 2 not found ***\n\n";
+        return;
+    }
+
+    if(ownAccount) {
+        this->accounts[account1Index] -> withdraw(amount);
+        this->transactions[account1Index].push_back(-amount);
+        this->accounts[account2Index] -> makeDeposit(amount);
+        this->transactions[account2Index].push_back(amount);
+
+        return;
+    }
+
+    if(!fs::exists(depositUserPath / TRANSFERS_DIR)) {
+        fs::create_directory(depositUserPath / TRANSFERS_DIR);
+    }
+
+    transferFile.open(depositUserPath / TRANSFERS_DIR / (to_string(account2) + ".txt"), ios::app);
+
+    if(!transferFile.is_open()) {
+        cerr << "\n*** Unable to open transfer file. Transfer aborted. ***\n\n";
+        return;
+    }
+
+    transferFile << amount << endl;
+
+    transferFile.close();
+
+    this->accounts[account1Index] -> withdraw(amount);
+    this->transactions[account1Index].push_back(-amount);
+
 }
 
 double userType::sumTransactions(int accountIndex) const {

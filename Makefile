@@ -39,8 +39,5 @@ checkingAccountType.o: $(SRC_DIR)/checkingAccountType.cpp $(INCLUDE_DIR)/checkin
 userType.o: $(SRC_DIR)/userType.cpp $(INCLUDE_DIR)/userType.h
 	$(CC) $(CFLAGS) -c $<
 
-transfersAndWire.o: $(SRC_DIR)/transfersAndWire.cpp $(INCLUDE_DIR)/transfersAndWire.h
-	$(CC) $(CFLAGS) -c $<
-
 clean:
 	rm -f banking-app *.o *~

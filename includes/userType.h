@@ -17,8 +17,9 @@
 #include "certificateOfDepositType.h"
 #include "checkingAccountType.h"
 
-const string ACCOUNTS_DIR = "data/accounts";
-const string USER_DATA_FILE = "data.txt";
+const string USER_DIR = "data/accounts";
+const string DATA_FILE = "data.txt";
+const string TRANSFERS_DIR = "pending_transfers";
 enum bankingType{SAVINGS, HIGH_INTEREST_SAVINGS, NO_SERVICE_CHARGE_CHECKING, SERVICE_CHARGE_CHECKING, HIGH_INTEREST_CHECKING, CERTIFICATE_OF_DEPOSIT};
 
 using namespace std;
@@ -30,6 +31,8 @@ class userType {
 
 	// Load user and account data into vector of structs
 	bool Initialize();
+	// account 1 is the account is the account the money will be withdrawn from and account 2 is the one being deposited into
+	void transfer(double amount, int account1, int account2);
 
 	// Sum all transactions in an account
 	double sumTransactions(int accountIndex) const;
