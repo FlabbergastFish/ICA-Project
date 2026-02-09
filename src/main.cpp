@@ -1,17 +1,17 @@
 #include <iostream>
 #include "userType.h"
+#include "ui.h"
 
 using namespace std;
 
 
 int main()
 {
-	userType user; // The user signed in
+	userType user;
 
-	// Set at login. All that needs set for init.
-	user.username = "j_doe";
-
-	user.Initialize();
+	if(!loginMenu(user)) {
+		return 0; // Cancelled login ends the program
+	}
 
 	return 0;
 }

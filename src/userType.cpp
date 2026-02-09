@@ -5,7 +5,7 @@ userType::userType() {
 }
 
 // Load user and account data
-bool userType::Initialize() {
+int userType::Initialize() {
     fs::path userPath = fs::path(USER_DIR);
     ifstream inFile;
     bankingType accountType;
@@ -18,26 +18,27 @@ bool userType::Initialize() {
     string name;
 
     if (!fs::exists(userPath)) {
-        cerr << "\n*** Could not find accounts directory. User not initialized ***\n\n";
-        return false;
+        // cerr << "\n*** Could not find accounts directory. User not initialized ***\n\n";
+        return 1;
     }
 
     if (fs::is_empty(userPath)) {
-        cerr << "\n*** No user directories in accounts directory. User not initialized ***\n\n";
-        return false;
+        // cerr << "\n*** No user directories in accounts directory. User not initialized ***\n\n";
+        return 2;
     }
 
     userPath = userPath / this -> username;
 
     if (!fs::directory_entry(userPath).is_directory()) {
-        return false;
+        // cerr << "\n*** No user directory. User not initialized ***\n\n";
+        return 3;
     }
 
     inFile.open(userPath / DATA_FILE);
 
     if (!inFile.is_open()) {
-        cerr << "\n*** File is not open. User not initialized **\n\n";
-        return false;
+        // cerr << "\n*** File is not open. User not initialized ***\n\n";
+        return 4;
     }
 
     this -> username = userPath.filename().string();
@@ -49,6 +50,12 @@ bool userType::Initialize() {
     getline(inFile, this -> salt);
 
     inFile.close();
+
+    // TODO: Authenticate User Password
+    if(false) {
+        // cerr << "\n*** Incorrect password. User not initialized ***\n\n";
+        return 5;
+    }
 
     accountCounter = 0;
 
@@ -67,8 +74,8 @@ bool userType::Initialize() {
         inFile >> accountTypeInt;
         
         if(accountTypeInt < 0 || accountTypeInt > 5) {
-            cerr << file.path().filename().string() << endl;
-            cerr << "\n*** Invalid account type. Account data not initialized ***\n\n";
+            // cerr << file.path().filename().string() << endl;
+            // cerr << "\n*** Invalid account type. Account data not initialized ***\n\n";
             continue;
         }
         
@@ -120,7 +127,7 @@ bool userType::Initialize() {
         accountCounter++;
     }
 
-    return true;
+    return 0;
 }
 
 void userType::transfer(double amount, int account1, int account2) {

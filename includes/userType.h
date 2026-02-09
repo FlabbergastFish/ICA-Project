@@ -30,7 +30,7 @@ class userType {
 	userType();
 
 	// Load user and account data into vector of structs
-	bool Initialize();
+	int Initialize();
 	// account 1 is the account is the account the money will be withdrawn from and account 2 is the one being deposited into
 	void transfer(double amount, int account1, int account2);
 
