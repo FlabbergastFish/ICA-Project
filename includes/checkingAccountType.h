@@ -16,7 +16,8 @@ public:
         virtual void writeCheck(double amount);
 		  virtual void withdraw(int withdrawalAmount) override;
 		  virtual void makeDeposit(int depositAmount) override;
-			virtual void createMonthlyStatement() override;
+		  virtual void createMonthlyStatement() override;
+		  virtual void print() override;
 
 //      double getMinimumBalance() const;
 //      double getServiceCharge() const;

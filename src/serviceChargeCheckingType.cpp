@@ -85,8 +85,14 @@ void serviceChargeCheckingType::createMonthlyStatement()
 
 void serviceChargeCheckingType::print()
 {
-        cout << fixed << showpoint << setprecision(2);
-        //cout << "Service Charge Checking: " << getName() << "\t ACCT# "
-        //          << getAccountNumber() << "\tBalance: $" << getBalance();
-		cout <<"details" << endl;
+	cout << fixed << showpoint << setprecision(2);
+	cout << "================================\n";
+	cout << "Account Type: SERVICE CHARGE CHECKING\n";
+	cout << "Name: " << name << endl;
+	cout << "Account Number: " << accountNumber << endl;
+	cout << "Balance: $" << balance << endl;
+	cout << "Monthly Service Charge: $" << serviceChargeAccount << endl;
+	cout << "Withdrawal Fee: $5.00 per transaction\n";
+	cout << "Checks Written This Month: " << numberOfChecksWritten << endl;
+	cout << "================================\n";
 }

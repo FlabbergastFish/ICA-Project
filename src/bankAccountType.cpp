@@ -31,7 +31,10 @@ void bankAccountType::withdraw(int withdrawalAmount)
 
 void bankAccountType::print()
 {
-    cout << "Name: " << this->name << endl;
-    cout << "Account Number: " << this->accountNumber << endl;
-    cout << "Balance: " << this->balance << endl;
+    cout << "================================\n";
+	 cout << "Account Type: Basic Account\n";
+	 cout << "name: " << this->name << endl;
+	 cout << "Account Number: " << this->accountNumber << endl;
+	 cout << "Balance: $" << this->balance << endl;
+	 cout << "================================\n";
 }

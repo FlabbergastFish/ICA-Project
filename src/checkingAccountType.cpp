@@ -28,3 +28,14 @@ void checkingAccountType::createMonthlyStatement()
 }
 
 void checkingAccountType::writeCheck(double amount){};
+
+void checkingAccountType::print()
+{
+	cout << "===================================\n";
+	cout << "Account Type: CHECKING ACCOUNT\n";
+	cout << "Name: " << name << endl;
+	cout << "Account Number: " << accountNumber << endl;
+	cout << "Balance: $" << balance << endl;
+	cout << "Withdrawal Fee: $2.50 per transaction\n";
+	cout << "===================================\n";
+}

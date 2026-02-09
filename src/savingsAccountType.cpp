@@ -38,7 +38,14 @@ void savingsAccountType:: createMonthlyStatement(){
 	}
 
 
-void savingsAccountType:: print(){
-	cout << "your account details are <account details>" << endl;
-	}
-
+void savingsAccountType:: print()
+{
+	cout << "===============================\n";
+	cout << "Account Type: SAVINGS ACCOUNT\n";
+	cout << "Name: " << name << endl;
+	cout << "Account Number: " << accountNumber << endl;
+	cout << "Balance: $" << balance << endl;
+	cout << "Interest Rate: " << (savingsIntRate * 100) << "%\n";
+	cout << "Minimum Balance Required: $" << minimumBalance << endl;
+	cout << "===============================\n";
+}
