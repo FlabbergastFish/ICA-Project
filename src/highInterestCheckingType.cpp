@@ -47,7 +47,13 @@ void highInterestCheckingType::createMonthlyStatement()
 
 void highInterestCheckingType::print()
 {
-	cout << fixed << showpoint << setprecision(2);
-	cout << "Higher Interest Checking: " << name << "\t ACCT# " 
-	     << getAccountNumber() << "\tBalance: $" << getBalance();
+    cout << fixed << showpoint << setprecision(2);
+    cout << "===============================\n";
+    cout << "Account Type: HIGH INTEREST CHECKING\n";
+    cout << "Name: " << name << endl;
+    cout << "Account Number: " << accountNumber << endl;
+    cout << "Balance: $" << balance << endl;
+    cout << "Interest Rate: " << (getInterestRate() * 100) << "%\n";
+    cout << "Minimum Balance: $" << getMinimumBalance() << endl;
+    cout << "===============================\n";
 }

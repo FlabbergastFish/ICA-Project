@@ -9,8 +9,14 @@ int main()
 {
 	userType user;
 
-	if(!loginMenu(user)) {
-		return 0; // Cancelled login ends the program
+	// display login menu
+	if(loginMenu(user)) {
+		// show main menu if login successful
+		displayMainMenu(user);
+	}
+
+	else {
+		cout << "Goodbye!\n"; // cancelled login ends the program
 	}
 
 	return 0;

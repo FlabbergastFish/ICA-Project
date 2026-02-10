@@ -1,5 +1,6 @@
 #include "highInterestSavingsType.h"
 #include <iostream>
+#include <iomanip>
 
 using namespace std;
 
@@ -15,6 +16,15 @@ void highInterestSavingsType::withdraw(int amount){
 	}
 }
 
-void highInterestSavingsType::print(){
-	cout << "your value is <value>" << endl;
+void highInterestSavingsType::print()
+{
+	cout << fixed << showpoint << setprecision(2);
+	cout << "===============================\n";
+	cout << "Account Type: HIGH INTEREST SAVINGS\n";
+	cout << "Name: " << name << endl;
+	cout << "Account Number: " << accountNumber << endl;
+	cout << "Balance: $" << balance << endl;
+	cout << "Interest Rate: " << (getInterestRate() * 100) << "%\n";
+	cout << "Minimum Balance: $" << getMinBalance() << endl;
+	cout << "===============================\n";
 }

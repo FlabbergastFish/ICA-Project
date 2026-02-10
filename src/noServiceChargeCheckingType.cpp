@@ -56,9 +56,15 @@ void noServiceChargeCheckingType::createMonthlyStatement(){
 
 void noServiceChargeCheckingType::print()
 {
-	cout << fixed << showpoint << setprecision(2);
-	cout << "No Service Charge Check. " << name << "\t ACCT# " 
-	     << getAccountNumber() << "\tBalance: $" << getBalance();
+	cout << "===============================\n";
+	cout << "Account Type: NO SERVICE CHARGE CHECKING\n";
+	cout << "Name: " << name << endl;
+	cout << "Account Number: " << accountNumber << endl;
+	cout << "Balance: $" << balance << endl;
+	cout << "Monthly Fee: $0.00\n";
+	cout << "Minimum Balance: $" << getMinimumBalance() << endl;
+	cout << "Interest Rate: " << (interestRate * 100) << "%\n";
+	cout << "===============================\n";
 }
 
 void noServiceChargeCheckingType::withdraw(int amount){
