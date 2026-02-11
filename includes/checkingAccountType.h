@@ -11,7 +11,7 @@ class checkingAccountType: public bankAccountType
 {
 public:
         // constructor
-        checkingAccountType(string name, int accountNumber, double balance);
+        checkingAccountType(string name, int accountNumber, double balance, bool frozen);
 
         virtual void writeCheck(double amount);
 		  virtual void withdraw(int withdrawalAmount) override;

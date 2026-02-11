@@ -9,19 +9,19 @@ const double highInterestCheckingType::INTEREST_RATE = 0.05;
 const double highInterestCheckingType::MIN_BALANCE = 5000.00;
 
 highInterestCheckingType::highInterestCheckingType(string name, 
-		          int accountNumber, double balance) 
+		          int accountNumber, double balance, bool frozen) 
 	                : noServiceChargeCheckingType(name, accountNumber, 
-			  balance)
+			  balance, frozen)
 {
 	minimumBalance = MIN_BALANCE;
 	interestRate = INTEREST_RATE;
 }
 
 highInterestCheckingType::highInterestCheckingType(string name, 
-		          int accountNumber, double balance, 
+		          int accountNumber, double balance, bool frozen, 
 			  double minBalance, double intRate) 
 	                : noServiceChargeCheckingType(name, accountNumber, 
-			  balance, minBalance, intRate)
+			  balance, frozen, minBalance, intRate)
 {
 }
 
@@ -32,11 +32,19 @@ double highInterestCheckingType::getInterestRate()
 
 void highInterestCheckingType::setInterestRate(double intRate)
 {
+	if(frozen) {
+		return;
+	}
+
 	interestRate = intRate;
 }
 
 void highInterestCheckingType::postInterest()
 {
+	if(frozen) {
+		return;
+	}
+	
 	balance = balance + balance * interestRate;
 }
 
@@ -48,12 +56,16 @@ void highInterestCheckingType::createMonthlyStatement()
 void highInterestCheckingType::print()
 {
     cout << fixed << showpoint << setprecision(2);
-    cout << "===============================\n";
+    if(frozen) {
+		cout << "================[FROZEN]================\n";
+	}else {
+		cout << "========================================\n";
+	}
     cout << "Account Type: HIGH INTEREST CHECKING\n";
     cout << "Name: " << name << endl;
     cout << "Account Number: " << accountNumber << endl;
     cout << "Balance: $" << balance << endl;
     cout << "Interest Rate: " << (getInterestRate() * 100) << "%\n";
     cout << "Minimum Balance: $" << getMinimumBalance() << endl;
-    cout << "===============================\n";
+    cout << "========================================\n";
 }

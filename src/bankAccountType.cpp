@@ -17,24 +17,36 @@ int bankAccountType::getBalance()
 
 void bankAccountType::makeDeposit(int depositAmount)
 {
-	 cout << "Base class deposit: Adding $" << depositAmount << " to account.\n";
+	if(frozen) {
+		return;
+	}
+
+	cout << "Base class deposit: Adding $" << depositAmount << " to account.\n";
     balance += depositAmount;
-	 cout << "New balance: $" << balance << endl;
+	cout << "New balance: $" << balance << endl;
 }
 
 void bankAccountType::withdraw(int withdrawalAmount)
 {
-	 cout << "Base class withdrawal: Removing $" << withdrawalAmount << "From account.\n";
+	if(frozen) {
+		return;
+	}
+
+	cout << "Base class withdrawal: Removing $" << withdrawalAmount << "From account.\n";
     balance -= withdrawalAmount;
-	 cout << "New balance: $" << balance << endl;
+	cout << "New balance: $" << balance << endl;
 }
 
 void bankAccountType::print()
 {
-    cout << "================================\n";
-	 cout << "Account Type: Basic Account\n";
-	 cout << "name: " << this->name << endl;
-	 cout << "Account Number: " << this->accountNumber << endl;
-	 cout << "Balance: $" << this->balance << endl;
-	 cout << "================================\n";
+	if(frozen) {
+		cout << "================[FROZEN]================\n";
+	}else {
+		cout << "========================================\n";
+	}
+	cout << "Account Type: Basic Account\n";
+	cout << "name: " << this->name << endl;
+	cout << "Account Number: " << this->accountNumber << endl;
+	cout << "Balance: $" << this->balance << endl;
+	cout << "========================================\n";
 }

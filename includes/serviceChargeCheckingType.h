@@ -8,8 +8,8 @@ using namespace std;
 class serviceChargeCheckingType : public checkingAccountType
 {
         public:
-                serviceChargeCheckingType(string name, int accountNumber, double balance);
-                serviceChargeCheckingType(string name, int accountNumber, double balance,
+                serviceChargeCheckingType(string name, int accountNumber, double balance, bool frozen);
+                serviceChargeCheckingType(string name, int accountNumber, double balance, bool frozen,
                                           double servChargeAmount, double servChargeCheck);
 
                 double getServiceChargeAccount();

@@ -34,7 +34,7 @@ class userType {
 	int Initialize();
 	bool AuthPass();
 	// account 1 is the account is the account the money will be withdrawn from and account 2 is the one being deposited into
-	void transfer(double amount, int account1, int account2);
+	int transfer(double amount, int account1, int account2);
 
 	// Sum all transactions in an account
 	double sumTransactions(int accountIndex) const;

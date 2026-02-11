@@ -10,8 +10,8 @@ const int serviceChargeCheckingType::MAXIMUM_NUM_OF_CHECKS = 5;
 const double serviceChargeCheckingType::SERVICE_CHARGE_EXCESS_NUM_OF_CHECKS = 5;
 
 serviceChargeCheckingType::serviceChargeCheckingType(string name, int accountNumber,
-        double balance)
-        : checkingAccountType(name, accountNumber, balance)
+        double balance, bool frozen)
+        : checkingAccountType(name, accountNumber, balance, frozen)
 {
         serviceChargeAccount = ACCOUNT_SERVICE_CHARGE;
         numberOfChecksWritten = 0;
@@ -19,10 +19,10 @@ serviceChargeCheckingType::serviceChargeCheckingType(string name, int accountNum
 }
 
 serviceChargeCheckingType::serviceChargeCheckingType(string name, int accountNumber,
-                                                     double balance,
+                                                     double balance, bool frozen,
                                                      double servChargeAmount,
                                                      double servChargeCheck)
-                                                 : checkingAccountType(name, accountNumber, balance)
+                                                 : checkingAccountType(name, accountNumber, balance, frozen)
 {
         serviceChargeAccount = servChargeAmount;
         serviceChargeCheck = servChargeCheck;
@@ -31,6 +31,10 @@ serviceChargeCheckingType::serviceChargeCheckingType(string name, int accountNum
 
 void serviceChargeCheckingType::withdraw(int withdrawalAmount)
 {
+        if(frozen) {
+		return;
+	}
+
 	const double EXTRA_SERVICE_FEE = 5.00;
 	cout << "SERVICE CHARGE CHECKING withdrawal: $" << withdrawalAmount << " + $"
 		  << EXTRA_SERVICE_FEE << " service fee\n";
@@ -45,6 +49,10 @@ double serviceChargeCheckingType::getServiceChargeAccount()
 
 void serviceChargeCheckingType::setServiceChargeAccount(double amount)
 {
+        if(frozen) {
+		return;
+	}
+
         serviceChargeAccount = amount;
 }
 
@@ -55,6 +63,10 @@ double serviceChargeCheckingType::getServiceChargeChecks()
 
 void serviceChargeCheckingType::setServiceChargeChecks(double amount)
 {
+        if(frozen) {
+		return;
+	}
+
         serviceChargeCheck = amount;
 }
 
@@ -70,6 +82,10 @@ void serviceChargeCheckingType::postServiceCharge()
 
 void serviceChargeCheckingType:: writeChecks(double amount)
 {
+        if(frozen) {
+		return;
+	}
+
         if (numberOfChecksWritten < MAXIMUM_NUM_OF_CHECKS)
                 balance = balance - amount;
         else
@@ -85,7 +101,11 @@ void serviceChargeCheckingType::createMonthlyStatement()
 void serviceChargeCheckingType::print()
 {
 	cout << fixed << showpoint << setprecision(2);
-	cout << "================================\n";
+	if(frozen) {
+		cout << "================[FROZEN]================\n";
+	}else {
+		cout << "========================================\n";
+	}
 	cout << "Account Type: SERVICE CHARGE CHECKING\n";
 	cout << "Name: " << name << endl;
 	cout << "Account Number: " << accountNumber << endl;
@@ -93,5 +113,5 @@ void serviceChargeCheckingType::print()
 	cout << "Monthly Service Charge: $" << serviceChargeAccount << endl;
 	cout << "Withdrawal Fee: $5.00 per transaction\n";
 	cout << "Checks Written This Month: " << numberOfChecksWritten << endl;
-	cout << "================================\n";
+	cout << "========================================\n";
 }

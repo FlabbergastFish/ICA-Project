@@ -9,5 +9,5 @@ public:
 	void createMonthlyStatement() override;
 	virtual void print() override;
 
-    certificateOfDepositType(string name, int accountNumber, double balance, double interestRate, int currentCDMonth);
+    certificateOfDepositType(string name, int accountNumber, double balance, bool frozen, double interestRate, int currentCDMonth);
 };

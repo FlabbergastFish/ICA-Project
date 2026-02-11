@@ -14,6 +14,7 @@ int userType::Initialize() {
     int accountCounter = 0;
     double currTransaction;
     int accountNumber;
+    bool frozen;
 
     // Check if path to user exists
     if (!fs::exists(userPath)) {
@@ -49,7 +50,7 @@ int userType::Initialize() {
 
     inFile.close();
 
-    // TODO: Authenticate User Password
+    // Check password
     if(!authed) {
         if(!AuthPass()) {
             // cerr << "\n*** Incorrect password. User not initialized ***\n\n";
@@ -84,6 +85,8 @@ int userType::Initialize() {
             // cerr << "\n*** Invalid account type. Account data not initialized ***\n\n";
             continue;
         }
+
+        inFile >> frozen;
         
         if(bankingType(accountTypeInt) == CERTIFICATE_OF_DEPOSIT) {
             inFile >> interestRate;
@@ -104,27 +107,27 @@ int userType::Initialize() {
         // Add acount to back of accounts vector (Calls sumTransactions to get balance)
         switch(bankingType(accountTypeInt)) {
             case SAVINGS:
-                this -> accounts.push_back(new savingsAccountType(this -> name, accountNumber, sumTransactions(accountCounter)));
+                this -> accounts.push_back(new savingsAccountType(this -> name, accountNumber, sumTransactions(accountCounter), frozen));
                 break;
 
             case HIGH_INTEREST_SAVINGS:
-                this -> accounts.push_back(new highInterestSavingsType(this -> name, accountNumber, sumTransactions(accountCounter)));
+                this -> accounts.push_back(new highInterestSavingsType(this -> name, accountNumber, sumTransactions(accountCounter), frozen));
                 break;
 
             case NO_SERVICE_CHARGE_CHECKING:
-                this -> accounts.push_back(new noServiceChargeCheckingType(this -> name, accountNumber, sumTransactions(accountCounter)));
+                this -> accounts.push_back(new noServiceChargeCheckingType(this -> name, accountNumber, sumTransactions(accountCounter), frozen));
                 break;
 
             case SERVICE_CHARGE_CHECKING: 
-                this -> accounts.push_back(new serviceChargeCheckingType(this -> name, accountNumber, sumTransactions(accountCounter)));
+                this -> accounts.push_back(new serviceChargeCheckingType(this -> name, accountNumber, sumTransactions(accountCounter), frozen));
                 break;
 
             case HIGH_INTEREST_CHECKING:
-                this -> accounts.push_back(new highInterestCheckingType(this -> name, accountNumber, sumTransactions(accountCounter)));
+                this -> accounts.push_back(new highInterestCheckingType(this -> name, accountNumber, sumTransactions(accountCounter), frozen));
                 break;
 
             case CERTIFICATE_OF_DEPOSIT:
-                this -> accounts.push_back(new certificateOfDepositType(this -> name, accountNumber, sumTransactions(accountCounter), interestRate, currentCDMonth));
+                this -> accounts.push_back(new certificateOfDepositType(this -> name, accountNumber, sumTransactions(accountCounter), frozen, interestRate, currentCDMonth));
                 break;
         }
 
@@ -161,7 +164,7 @@ bool userType::AuthPass() {
 
 }
 
-void userType::transfer(double amount, int account1, int account2) {
+int userType::transfer(double amount, int account1, int account2) {
     fs::path userPath = fs::path(USER_DIR);
     fs::path depositUserPath;
     bool accountFound = false;
@@ -172,7 +175,7 @@ void userType::transfer(double amount, int account1, int account2) {
 
     if(amount < 0) {
         cerr << "\n*** Cannot transfer a negative amount ***\n\n";
-        return;
+        return 1;
     }
 
     // Loop through user's accounts to the find account matching acount1
@@ -185,14 +188,18 @@ void userType::transfer(double amount, int account1, int account2) {
         account1Index++;
     }
 
-    // Check if amount being transferred is more than is in account
-    if(this -> accounts[account1Index] -> getBalance() < amount) {
-        return;
-    }
-
     if (!accountFound) {
         cerr << "\n*** Account 1 not found ***\n\n";
-        return;
+        return 2;
+    }
+
+    if(this -> accounts[account1Index] -> frozen) {
+		return 3;
+	}
+
+    // Check if amount being transferred is more than is in account
+    if(this -> accounts[account1Index] -> getBalance() < amount) {
+        return 4;
     }
 
     accountFound = false;
@@ -202,7 +209,8 @@ void userType::transfer(double amount, int account1, int account2) {
         // Iterate through all entries in user directory
         for(const fs::directory_entry &account : fs::directory_iterator(user)) {
             // Skip to next if is data file or folder
-            if(account.is_directory() || account.path().filename().string() == DATA_FILE) {
+            if(account.is_directory() || account.path().filename().string() == DATA_FILE 
+                                      || account.path().filename().string() == PASSWD_FILE) {
                 continue;
             }
 
@@ -232,17 +240,20 @@ void userType::transfer(double amount, int account1, int account2) {
 
     if (!accountFound) {
         cerr << "\n*** Account 2 not found ***\n\n";
-        return;
+        return 5;
     }
 
     // If transferring to own account the updates can be instant
     if(ownAccount) {
+        if(this -> accounts[account2Index] -> frozen) {
+		    return 6;
+	    }
         this->accounts[account1Index] -> withdraw(amount);
         this->transactions[account1Index].push_back(-amount); // Negative because it's a withdraw 
         this->accounts[account2Index] -> makeDeposit(amount);
         this->transactions[account2Index].push_back(amount);
 
-        return;
+        return 0;
     }
 
     // If not own account, create pending transfers directory if it doesn't exist
@@ -255,7 +266,7 @@ void userType::transfer(double amount, int account1, int account2) {
 
     if(!transferFile.is_open()) {
         cerr << "\n*** Unable to open transfer file. Transfer aborted. ***\n\n";
-        return;
+        return 7;
     }
 
     transferFile << amount << endl;
@@ -267,6 +278,7 @@ void userType::transfer(double amount, int account1, int account2) {
     this->accounts[account1Index] -> withdraw(amount);
     this->transactions[account1Index].push_back(-amount); // Negative because it's a withdraw
 
+    return 0;
 }
 
 double userType::sumTransactions(int accountIndex) const {

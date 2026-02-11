@@ -8,11 +8,13 @@ public:
     string name;
     int accountNumber;
     int balance;
-    bankAccountType(string name, int accountNumber, int balance)
+    bool frozen;
+    bankAccountType(string name, int accountNumber, int balance, bool frozen)
     {
         this->name = name;
         this->accountNumber = accountNumber;
         this->balance = balance;
+        this -> frozen = frozen;
     }
 
     string getAccountName();

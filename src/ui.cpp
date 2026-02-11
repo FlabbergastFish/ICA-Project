@@ -39,6 +39,7 @@ bool loginMenu(userType &user) {
         	fs::path accountDir = fs::path(USER_DIR) / username / "12345.txt";
         	ofstream accountFile(accountDir); 
         	accountFile << accountType << endl;
+			accountFile << '0' << endl; // If the account is frozen
 			accountFile.close();
 			ofstream passFile(fs::path(USER_DIR) / username / PASSWD_FILE);
 			passFile << password;
@@ -135,8 +136,13 @@ void selectAccountMenu(userType &user) {
 	int numAccounts = static_cast<int>(user.accounts.size());
 	for (int i = 0; i < numAccounts; i++) {
 		cout << (i + 1) << ". ";
-		cout << "Account #" << user.accounts[i]->getAccountNumber()
-			  << " - Balance: $" << user.accounts[i]->getBalance() << endl;
+		cout << "Account #" << user.accounts[i]->getAccountNumber();
+			if(user.accounts[i]->frozen){
+				cout << " - Balance: $" << user.accounts[i] -> balance << " [FROZEN]" << endl;
+			}else {
+				cout << " - Balance: $" << user.accounts[i] -> balance << endl;
+			}
+
 	}
 
 	cout << (numAccounts + 1) << ". Back to Main Menu\n";
@@ -166,7 +172,11 @@ void accountActionsMenu (userType &user, int accountIndex) {
 	while (!exitMenu) {
 		bankAccountType* account = user.accounts[accountIndex];
 
-		cout << "\n========================================\n";
+		if(user.accounts[accountIndex] -> frozen) {
+			cout << "\n================[FROZEN]================\n";
+		}else {
+			cout << "\n========================================\n";
+		}
 		cout << "         ACCOUNT MENU\n";
 		cout << "         " << user.name << endl;
 		cout << "         Account #" << account->getAccountNumber() << endl;
@@ -176,7 +186,8 @@ void accountActionsMenu (userType &user, int accountIndex) {
 		cout << "3. Withdraw Funds\n";
 		cout << "4. Transfer Funds\n";
 		cout << "5. View Account Details\n";
-		cout << "6. Back to Account Selection\n";
+		cout << "6. Toggle Account Freeze\n";
+		cout << "7. Back to Main Menu\n";
 		cout << "========================================\n";
 		cout << "Enter choice: ";
 		cin  >> choice;
@@ -199,6 +210,9 @@ void accountActionsMenu (userType &user, int accountIndex) {
 				viewAccountDetails(account);
 				break;
 			case 6:
+				account -> frozen = !account -> frozen;
+				break;
+			case 7:
 				exitMenu = true;
 				break;
 			default:
@@ -258,6 +272,11 @@ void transferFunds(userType &user, int fromAccountIndex) {
 	int numAccounts = static_cast<int>(user.accounts.size());
 	int toAccountChoice;
 
+	if(user.accounts[fromAccountIndex] -> frozen) {
+		cout << "\n*** You cannot transfer from a frozen account. ***\n\n";
+		return;
+	}
+
 	if (numAccounts < 2) {
 		cout << "\n*** You need at least 2 accounts to transfer funds. ***\n\n";
 		return;
@@ -275,7 +294,11 @@ void transferFunds(userType &user, int fromAccountIndex) {
 		if (i != fromAccountIndex) {
 			cout << (i + 1) << ". ";
 			cout << "Account #" << user.accounts[i]->getAccountNumber()
-				  << " - Balance: $" << user.accounts[i]->getBalance() << endl;
+				 << " - Balance: $" << user.accounts[i]->getBalance(); 
+			if(user.accounts[i] -> frozen) {
+				cout << " [FROZEN]";
+			}
+			cout << endl;
         }
     }
 
@@ -314,12 +337,22 @@ void transferFunds(userType &user, int fromAccountIndex) {
 	int fromAccountNum = user.accounts[fromAccountIndex]->getAccountNumber();
 	int toAccountNum = user.accounts[toAccountIndex]->getAccountNumber();
 
-	user.transfer(amount, fromAccountNum, toAccountNum);
+	switch(user.transfer(amount, fromAccountNum, toAccountNum)) {
+		case 0:
+			cout << "\nTransfer completed!\n";
+			cout << "Transferred $" << amount << " from Account #" << fromAccountNum
+				 << " to Account #" << toAccountNum << endl;
+			cout << "----------------------------------------\n";
+			break;
+		case 6:
+			cout << "\nTransfer not completed!\n";
+			cout << "Account #" << toAccountNum << " is frozen." << endl;
+			cout << "----------------------------------------\n";
+			break;
+		default :
+			break;
+	}
 
-	cout << "\nTransfer completed!\n";
-	cout << "Transferred $" << amount << " from Account #" << fromAccountNum
-		  << " to Account #" << toAccountNum << endl;
-	cout << "----------------------------------------\n";
 }
 
 void viewAccountDetails(bankAccountType* account) {

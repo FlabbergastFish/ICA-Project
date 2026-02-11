@@ -4,7 +4,7 @@
 
 
 
-savingsAccountType::savingsAccountType(string name,int accountNumber, int balance) : bankAccountType(name, accountNumber, balance){
+savingsAccountType::savingsAccountType(string name,int accountNumber, int balance, bool frozen) : bankAccountType(name, accountNumber, balance, frozen){
 
 
 }
@@ -15,6 +15,10 @@ double savingsAccountType:: getInterestRate(){
 }
 
 void savingsAccountType::withdraw(int withdrawalAmount){
+	if(frozen) {
+		return;
+	}
+
 	cout << "SAVINGS withdrawal:\n";
 	if (balance - withdrawalAmount < minimumBalance){
 		cout << "ERROR: Withdrawal would bring balance below minimum of $" << minimumBalance << endl;
@@ -28,6 +32,10 @@ void savingsAccountType::withdraw(int withdrawalAmount){
 }
 
 void savingsAccountType::makeDeposit(int depositAmount){
+	if(frozen) {
+		return;
+	}
+
 	cout << "SAVINGS deposit: Adding $" << depositAmount << endl;
 	balance += depositAmount;
 	cout << "New balance: $" << balance << endl;
@@ -40,12 +48,16 @@ void savingsAccountType:: createMonthlyStatement(){
 
 void savingsAccountType:: print()
 {
-	cout << "===============================\n";
+	if(frozen) {
+		cout << "================[FROZEN]================\n";
+	}else {
+		cout << "========================================\n";
+	}
 	cout << "Account Type: SAVINGS ACCOUNT\n";
 	cout << "Name: " << name << endl;
 	cout << "Account Number: " << accountNumber << endl;
 	cout << "Balance: $" << balance << endl;
 	cout << "Interest Rate: " << (savingsIntRate * 100) << "%\n";
 	cout << "Minimum Balance Required: $" << minimumBalance << endl;
-	cout << "===============================\n";
+	cout << "========================================\n";
 }

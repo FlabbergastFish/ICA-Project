@@ -5,10 +5,11 @@ using namespace std;
 
 certificateOfDepositType::certificateOfDepositType(string name,
                                                    int accountNumber,
-                                                   double balance,
+                                                   double balance, 
+												   bool frozen,
                                                    double interestRate,
                                                    int currentCDMonth)
-    : bankAccountType(name, accountNumber, balance),
+    : bankAccountType(name, accountNumber, balance, frozen),
       interestRate(interestRate),
       currentCDMonth(currentCDMonth)
 {
@@ -21,13 +22,17 @@ void certificateOfDepositType::createMonthlyStatement(){
 void certificateOfDepositType::print()
 {
 	cout << fixed << showpoint << setprecision(2);
-	cout << "===============================\n";
+	if(frozen) {
+		cout << "================[FROZEN]================\n";
+	}else {
+		cout << "========================================\n";
+	}
 	cout << "Account Type: CERTIFICATE OF DEPOSIT\n";
 	cout << "Name: " << name << endl;
 	cout << "Account Number: " << accountNumber << endl;
 	cout << "Balance: $" << balance << endl;
 	cout << "Interest Rate: " << (interestRate * 100) << "%\n";
 	cout << "Current Month: " << currentCDMonth << endl;
-	cout << "===============================\n";
+	cout << "========================================\n";
 }
 

@@ -9,7 +9,7 @@ using namespace std;
 class savingsAccountType: public bankAccountType{
 
 	public:
-	savingsAccountType(string name, int accountNumber, int balance);
+	savingsAccountType(string name, int accountNumber, int balance, bool frozen);
 
 	double getInterestRate();
 	virtual void withdraw(int withdrawalAmount) override; // Override withdraw

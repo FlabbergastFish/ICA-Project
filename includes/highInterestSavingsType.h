@@ -7,7 +7,7 @@
 
 class highInterestSavingsType: public savingsAccountType{
 public:
-	highInterestSavingsType(string name, int accountNumber, int balance);
+	highInterestSavingsType(string name, int accountNumber, int balance, bool frozen);
 
 
 	double getMinBalance();
