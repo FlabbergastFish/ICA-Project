@@ -3,7 +3,7 @@
 bool loginMenu(userType &user) {
     bool loginSuccess = false;
 
-    cout << "Hello! Please login (enter 'x' to exit)\n";
+    cout << "Hello! Please login or register a new account(enter 'x' to exit or 'register' to register)\n";
 
     do {
 		cout << "Username: ";
@@ -12,7 +12,32 @@ bool loginMenu(userType &user) {
 		if(user.username == "x" || user.username == "X") {
 			return false;
 		}
-
+		else if (user.username == "register" || user.username == "Register" || user.username == "REGISTER") //account creation function
+		{
+			string input;
+			cout << "Enter username: \n";
+			getline(cin, input);
+			string username = input;
+			cout << "Enter name: \n";
+			getline(cin, input);
+			string name = input;
+			cout << "Enter account type: \n";
+			int accountType;
+			cin >> accountType;
+			fs::path newAccountPath = fs::path(USER_DIR) / username;
+        	fs::create_directories(newAccountPath);
+			newAccountPath /= DATA_FILE;
+        	ofstream file(newAccountPath); 
+        	file << name << endl;
+        	file << 0 << endl; // admin functionality will be added later
+        	file << "salt" << endl;
+        	fs::path accountDir = fs::path(USER_DIR) / username / "12345.txt";
+        	ofstream accountFile(accountDir); 
+        	accountFile << accountType << endl;
+			cout << "Account created. Please sign in again." << endl;
+			return false;
+		}
+		
 		cout << "Password: ";
         getline(cin, user.password);
 
