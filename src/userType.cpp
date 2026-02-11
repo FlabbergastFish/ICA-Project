@@ -4,6 +4,12 @@ userType::userType() {
 
 }
 
+userType::~userType() {
+	for(bankAccountType* account : this -> accounts) {
+		delete account;
+		account = nullptr;
+	}
+}
 // Load user and account data
 int userType::Initialize() {
     fs::path userPath = fs::path(USER_DIR);

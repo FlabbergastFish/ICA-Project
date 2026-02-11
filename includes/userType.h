@@ -76,6 +76,7 @@ namespace fs = filesystem;
 class userType {
 	public:
 	userType();
+	~userType();
 
 	// Load user and account data into vector of structs
 	int Initialize();
