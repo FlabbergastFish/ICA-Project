@@ -22,6 +22,9 @@ bool loginMenu(userType &user) {
 			cout << "Enter name: \n";
 			getline(cin, input);
 			string name = input;
+			cout << "Enter password: \n";
+			getline(cin, input);
+			string password = input;
 			cout << "Enter account type: \n";
 			int accountType;
 			cin >> accountType;
@@ -32,9 +35,14 @@ bool loginMenu(userType &user) {
         	file << name << endl;
         	file << 0 << endl; // admin functionality will be added later
         	file << "salt" << endl;
+			file.close();
         	fs::path accountDir = fs::path(USER_DIR) / username / "12345.txt";
         	ofstream accountFile(accountDir); 
         	accountFile << accountType << endl;
+			accountFile.close();
+			ofstream passFile(fs::path(USER_DIR) / username / PASSWD_FILE);
+			passFile << password;
+			passFile.close();
 			cout << "Account created. Please sign in again." << endl;
 			return false;
 		}
@@ -88,9 +96,9 @@ void displayMainMenu(userType &user) {
 
 	while (!exitMenu) {
 		cout << "\n========================================\n";
-      cout << "         MAIN MENU\n";
-      cout << "         Welcome, " << user.username << "!\n";
-      cout << "========================================\n";
+      	cout << "         MAIN MENU\n";
+      	cout << "         Welcome, " << user.username << "!\n";
+      	cout << "========================================\n";
 		cout << "1. Select Account\n";
 		cout << "2. View all Accounts\n";
 		cout << "3. Logout\n";
