@@ -150,6 +150,7 @@ void userType::transfer(double amount, int account1, int account2) {
         return;
     }
 
+    // Loop through user's accounts to the find account matching acount1
     for(bankAccountType* account : this -> accounts) {
         if(account -> getAccountNumber() == account1) {
             accountFound = true;
@@ -159,7 +160,8 @@ void userType::transfer(double amount, int account1, int account2) {
         account1Index++;
     }
 
-    if(this ->accounts[account1Index] -> getBalance() <= amount) {
+    // Check if amount being transferred is more than is in account
+    if(this -> accounts[account1Index] -> getBalance() < amount) {
         return;
     }
 
@@ -170,13 +172,18 @@ void userType::transfer(double amount, int account1, int account2) {
 
     accountFound = false;
 
+    // Iterate through all users
     for(const fs::directory_entry &user : fs::directory_iterator(USER_DIR)) {
+        // Iterate through all entries in user directory
         for(const fs::directory_entry &account : fs::directory_iterator(user)) {
+            // Skip to next if is data file or folder
             if(account.is_directory() || account.path().filename().string() == DATA_FILE) {
                 continue;
             }
 
+            // Set deposit path to account's parent directory when account found
             if(stoi(account.path().filename().stem().string()) == account2) {
+                // Check if the user is the owner of the deposit account
                 if(user.path().filename().string() == this -> username) {
                     ownAccount = true;
                 }
@@ -186,9 +193,11 @@ void userType::transfer(double amount, int account1, int account2) {
                 break;
             }
 
+            // Should line up with user.account[]
             account2Index++;
         }
 
+        // Exit loop if account is found
         if(accountFound) {
             break;
         }
@@ -201,19 +210,22 @@ void userType::transfer(double amount, int account1, int account2) {
         return;
     }
 
+    // If transferring to own account the updates can be instant
     if(ownAccount) {
         this->accounts[account1Index] -> withdraw(amount);
-        this->transactions[account1Index].push_back(-amount);
+        this->transactions[account1Index].push_back(-amount); // Negative because it's a withdraw 
         this->accounts[account2Index] -> makeDeposit(amount);
         this->transactions[account2Index].push_back(amount);
 
         return;
     }
 
+    // If not own account, create pending transfers directory if it doesn't exist
     if(!fs::exists(depositUserPath / TRANSFERS_DIR)) {
         fs::create_directory(depositUserPath / TRANSFERS_DIR);
     }
 
+    // Open account file in transfers directory in append mode (creates it if it doesn't exist)
     transferFile.open(depositUserPath / TRANSFERS_DIR / (to_string(account2) + ".txt"), ios::app);
 
     if(!transferFile.is_open()) {
@@ -225,8 +237,10 @@ void userType::transfer(double amount, int account1, int account2) {
 
     transferFile.close();
 
+    // After adding transfer to other user's pending transfers, withdraw
+    // amount from own account and add to transactions
     this->accounts[account1Index] -> withdraw(amount);
-    this->transactions[account1Index].push_back(-amount);
+    this->transactions[account1Index].push_back(-amount); // Negative because it's a withdraw
 
 }
 
