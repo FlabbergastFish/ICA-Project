@@ -19,6 +19,7 @@
 
 const string USER_DIR = "data/accounts";
 const string DATA_FILE = "data.txt";
+const string PASSWD_FILE = "passwd.txt";
 const string TRANSFERS_DIR = "pending_transfers";
 enum bankingType{SAVINGS, HIGH_INTEREST_SAVINGS, NO_SERVICE_CHARGE_CHECKING, SERVICE_CHARGE_CHECKING, HIGH_INTEREST_CHECKING, CERTIFICATE_OF_DEPOSIT};
 
@@ -31,6 +32,7 @@ class userType {
 
 	// Load user and account data into vector of structs
 	int Initialize();
+	bool AuthPass();
 	// account 1 is the account is the account the money will be withdrawn from and account 2 is the one being deposited into
 	void transfer(double amount, int account1, int account2);
 
@@ -44,7 +46,7 @@ class userType {
 	bool manager = false;
 	vector<bankAccountType *> accounts;
 	vector<vector<double>> transactions;
-
+	bool authed = false;
 };
 
 #endif /* USER_TYPE_H_ */

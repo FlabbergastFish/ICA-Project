@@ -50,9 +50,11 @@ int userType::Initialize() {
     inFile.close();
 
     // TODO: Authenticate User Password
-    if(false) {
-        // cerr << "\n*** Incorrect password. User not initialized ***\n\n";
-        return 5;
+    if(!authed) {
+        if(!AuthPass()) {
+            // cerr << "\n*** Incorrect password. User not initialized ***\n\n";
+            return 5;
+        }
     }
 
     accountCounter = 0;
@@ -60,8 +62,9 @@ int userType::Initialize() {
     // Iterate through all files in user's directory to get accounts
     for (const fs::directory_entry &file : fs::directory_iterator(userPath)) {
 
-        // Skips data file and any other folders
-        if (file.is_directory() || file.path().filename().string() == DATA_FILE) {
+        // Skips data/passwd files and any other folders
+        if (file.is_directory() || file.path().filename().string() == DATA_FILE 
+                                || file.path().filename().string() == PASSWD_FILE) {
             continue;
         }
 
@@ -134,6 +137,28 @@ int userType::Initialize() {
     }
 
     return 0;
+}
+
+bool userType::AuthPass() {
+    ifstream inFile;
+    string passwd;
+
+    inFile.open(fs::path(USER_DIR) / this -> username / PASSWD_FILE);
+
+    if(!inFile.is_open()){
+        return false;
+    }
+
+    getline(inFile, passwd);
+
+    inFile.close();
+
+    if(passwd == this -> password) {
+        return true;
+    }else {
+        return false;
+    }
+
 }
 
 void userType::transfer(double amount, int account1, int account2) {
