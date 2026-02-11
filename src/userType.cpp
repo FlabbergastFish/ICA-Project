@@ -8,15 +8,14 @@ userType::userType() {
 int userType::Initialize() {
     fs::path userPath = fs::path(USER_DIR);
     ifstream inFile;
-    bankingType accountType;
     int accountTypeInt;
     double interestRate;
     int currentCDMonth;
     int accountCounter = 0;
     double currTransaction;
     int accountNumber;
-    string name;
 
+    // Check if path to user exists
     if (!fs::exists(userPath)) {
         // cerr << "\n*** Could not find accounts directory. User not initialized ***\n\n";
         return 1;
@@ -29,6 +28,7 @@ int userType::Initialize() {
 
     userPath = userPath / this -> username;
 
+    // TODO: exists check
     if (!fs::directory_entry(userPath).is_directory()) {
         // cerr << "\n*** No user directory. User not initialized ***\n\n";
         return 3;
@@ -41,9 +41,7 @@ int userType::Initialize() {
         return 4;
     }
 
-    this -> username = userPath.filename().string();
-
-
+    // Read name(string), manager check(boolean), salt(string) into user object
     getline(inFile, this -> name);
     inFile >> this -> manager;
     inFile.ignore(numeric_limits<streamsize>::max(),'\n');
@@ -59,7 +57,10 @@ int userType::Initialize() {
 
     accountCounter = 0;
 
+    // Iterate through all files in user's directory to get accounts
     for (const fs::directory_entry &file : fs::directory_iterator(userPath)) {
+
+        // Skips data file and any other folders
         if (file.is_directory() || file.path().filename().string() == DATA_FILE) {
             continue;
         }
@@ -71,59 +72,64 @@ int userType::Initialize() {
             continue;
         }
 
+        // Read in account type as int
         inFile >> accountTypeInt;
         
+        // Verify int is within enum range skip if not
         if(accountTypeInt < 0 || accountTypeInt > 5) {
             // cerr << file.path().filename().string() << endl;
             // cerr << "\n*** Invalid account type. Account data not initialized ***\n\n";
             continue;
         }
         
-        accountType = bankingType(accountTypeInt);
-    
-        if(accountType == CERTIFICATE_OF_DEPOSIT) {
+        if(bankingType(accountTypeInt) == CERTIFICATE_OF_DEPOSIT) {
             inFile >> interestRate;
             inFile >> currentCDMonth;
         }
 
+        // Add empty vector to back of transactions vector
         this -> transactions.push_back(vector<double>());
 
+        // Read transactions into just added empty vector
         while(inFile >> currTransaction) {
             this -> transactions[accountCounter].push_back(currTransaction);
         }
 
+        // Get account number from file name (without .txt extension) and convert to int
         accountNumber = stoi(file.path().filename().stem().string());
-        name = this -> name;
 
-        switch(accountType) {
+        // Add acount to back of accounts vector (Calls sumTransactions to get balance)
+        switch(bankingType(accountTypeInt)) {
             case SAVINGS:
-                this -> accounts.push_back(new savingsAccountType(name, accountNumber, sumTransactions(accountCounter)));
+                this -> accounts.push_back(new savingsAccountType(this -> name, accountNumber, sumTransactions(accountCounter)));
                 break;
 
             case HIGH_INTEREST_SAVINGS:
-                this -> accounts.push_back(new highInterestSavingsType(name, accountNumber, sumTransactions(accountCounter)));
+                this -> accounts.push_back(new highInterestSavingsType(this -> name, accountNumber, sumTransactions(accountCounter)));
                 break;
 
             case NO_SERVICE_CHARGE_CHECKING:
-                this -> accounts.push_back(new noServiceChargeCheckingType(name, accountNumber, sumTransactions(accountCounter)));
+                this -> accounts.push_back(new noServiceChargeCheckingType(this -> name, accountNumber, sumTransactions(accountCounter)));
                 break;
 
             case SERVICE_CHARGE_CHECKING: 
-                this -> accounts.push_back(new serviceChargeCheckingType(name, accountNumber, sumTransactions(accountCounter)));
+                this -> accounts.push_back(new serviceChargeCheckingType(this -> name, accountNumber, sumTransactions(accountCounter)));
                 break;
 
             case HIGH_INTEREST_CHECKING:
-                this -> accounts.push_back(new highInterestCheckingType(name, accountNumber, sumTransactions(accountCounter)));
+                this -> accounts.push_back(new highInterestCheckingType(this -> name, accountNumber, sumTransactions(accountCounter)));
                 break;
 
             case CERTIFICATE_OF_DEPOSIT:
-                this -> accounts.push_back(new certificateOfDepositType(name, accountNumber, sumTransactions(accountCounter), interestRate, currentCDMonth));
+                this -> accounts.push_back(new certificateOfDepositType(this -> name, accountNumber, sumTransactions(accountCounter), interestRate, currentCDMonth));
                 break;
         }
 
+        // Clear Buffer since ints were the last read
         inFile.ignore(numeric_limits<streamsize>::max(),'\n');
-
         inFile.close();
+
+        // Increase account counter for next account
         accountCounter++;
     }
 
