@@ -321,6 +321,11 @@ void transferFunds(userType &user, int fromAccountIndex) {
 		return;
 		}
 
+	if(user.accounts[toAccountIndex]->frozen) {
+		cout << "\n*** You cannot transfer to a frozen account. ***\n\n";
+		return;
+	}
+
 	double amount;
 	cout << "\nEnter amount to transfer: $";
 	cin >> amount;
