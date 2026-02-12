@@ -15,10 +15,24 @@ bool loginMenu(userType &user) {
 		}
 		else if (user.username == "register" || user.username == "Register" || user.username == "REGISTER") //account creation function
 		{
+			string username;
 			string input;
-			cout << "Enter username: \n";
-			getline(cin, input);
-			string username = input;
+			bool isValid = false;
+			do 
+				{
+					cout << "Enter username: \n";
+					getline(cin, input);
+					username = input;
+					fs::path newAccountPath = fs::path(USER_DIR) / username;
+					if (fs::exists(newAccountPath))
+					{
+					    cout << "Username already exists. Please choose a different username.\n";
+					}
+					else
+					{
+					    isValid = true;
+					}
+				} while (!isValid);
 			cout << "Enter name: \n";
 			getline(cin, input);
 			string name = input;
@@ -45,7 +59,7 @@ bool loginMenu(userType &user) {
 			passFile << password;
 			passFile.close();
 			cout << "Account created. Please sign in again." << endl;
-			return false;
+			continue;
 		}
 		
 		do{
